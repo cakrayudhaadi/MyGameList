@@ -1,6 +1,0 @@
-@MyGameList_HostAddress = http://localhost:5081
-
-GET {{MyGameList_HostAddress}}/api/
-Accept: application/json
-
-###
