@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using My_Game_List.DTOs;
-using MyGameList.Data;
-using MyGameList.Models;
+using MyGameList.Src.Features.Games.Models;
 
-namespace My_Game_List.Controllers
+namespace MyGameList.Src.Features.Games
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -14,15 +12,15 @@ namespace My_Game_List.Controllers
         private readonly MyGameListDbContext _context = context;
 
         [HttpGet]
-        public async Task<ActionResult<List<Games>>> GetGames()
+        public async Task<ActionResult<List<Game>>> GetGames()
         {
-            return Ok(await _context.Games.ToListAsync());
+            return Ok(await _context.Game.ToListAsync());
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Games>> GetVideoGameById(int id)
+        public async Task<ActionResult<Game>> GetVideoGameById(int id)
         {
-            var game = await _context.Games.FindAsync(id);
+            var game = await _context.Game.FindAsync(id);
             if (game is null)
                 return NotFound();
 
@@ -30,26 +28,26 @@ namespace My_Game_List.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Games>> AddGame(GamesDTO gameDTO)
+        public async Task<ActionResult<Game>> AddGame(GameDto gameDto)
         {
-            if (gameDTO is null)
+            if (gameDto is null)
                 return BadRequest();
 
-            Games newGame = gameDTO.GamesDTOToModel(null, null);
-            _context.Games.Add(newGame);
+            Game newGame = gameDto.GamesDtoToModel(null, null);
+            _context.Game.Add(newGame);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetVideoGameById), new { id = newGame.Id }, newGame);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateVideoGame(int id, GamesDTO gameDTO)
+        public async Task<IActionResult> UpdateVideoGame(int id, GameDto gameDto)
         {
-            var game = await _context.Games.FindAsync(id);
+            var game = await _context.Game.FindAsync(id);
             if (game is null)
                 return NotFound();
 
-            game = gameDTO.GamesDTOToModel(game, id);
+            game = gameDto.GamesDtoToModel(game, id);
 
             await _context.SaveChangesAsync();
 
@@ -59,11 +57,11 @@ namespace My_Game_List.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteVideoGame(int id)
         {
-            var game = await _context.Games.FindAsync(id);
+            var game = await _context.Game.FindAsync(id);
             if (game is null)
                 return NotFound();
 
-            _context.Games.Remove(game);
+            _context.Game.Remove(game);
             await _context.SaveChangesAsync();
 
             return NoContent();

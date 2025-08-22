@@ -1,10 +1,17 @@
-﻿namespace MyGameList.Models
-{
-    public class Games
-    {
-        public Games() {}
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
-        public Games(int id, string title, string description, DateTime? createdAt, DateTime? updatedAt)
+namespace MyGameList.Src.Features.Games.Models
+{
+    [Table("Games")]
+    public class Game
+    {
+        public Game()
+        {
+            Title = string.Empty;
+            Description = string.Empty;
+        }
+
+        public Game(int id, string title, string description, DateTime? createdAt, DateTime? updatedAt)
         {
             Id = id;
             Title = title;

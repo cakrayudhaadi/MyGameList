@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using MyGameList.Data;
+using MyGameList.Src.Features.Games;
 
 #nullable disable
 
@@ -25,7 +25,7 @@ namespace My_Game_List.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-            modelBuilder.Entity("MyGameList.Models.Games", b =>
+            modelBuilder.Entity("MyGameList.Models.Game", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -55,7 +55,7 @@ namespace My_Game_List.Migrations
                     b.HasKey("Id")
                         .HasName("pk_games");
 
-                    b.ToTable("games");
+                    b.ToTable("game");
                 });
 #pragma warning restore 612, 618
         }

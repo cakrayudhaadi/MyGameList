@@ -1,13 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MyGameList.Models;
-using System.Reflection.Emit;
+using MyGameList.Src.Features.Games.Models;
 using System.Text.RegularExpressions;
 
-namespace MyGameList.Data
+namespace MyGameList.Src.Features.Games
 {
     public partial class MyGameListDbContext(DbContextOptions<MyGameListDbContext> options) : DbContext(options)
     {
-        public DbSet<Games> Games => Set<Games>();
+        public DbSet<Game> Game => Set<Game>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

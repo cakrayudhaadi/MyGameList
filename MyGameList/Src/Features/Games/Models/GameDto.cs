@@ -1,12 +1,14 @@
-﻿using MyGameList.Models;
-
-namespace My_Game_List.DTOs
+﻿namespace MyGameList.Src.Features.Games.Models
 {
-    public class GamesDTO
+    public class GameDto
     {
-        public GamesDTO() {}
+        public GameDto()
+        {
+            Title = string.Empty;
+            Description = string.Empty;
+        }
 
-        public GamesDTO(string title, string description)
+        public GameDto(string title, string description)
         {
             Title = title;
             Description = description;
@@ -15,10 +17,10 @@ namespace My_Game_List.DTOs
         public string Title { get; set; }
         public string Description { get; set; }
 
-        public Games GamesDTOToModel(Games? game, int? id)
+        public Game GamesDtoToModel(Game? game, int? id)
         {
             if (game is null) {
-                game = new Games();
+                game = new Game();
             }
 
             game.Title = Title is not null ? Title : game.Title;

@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using MyGameList.Data;
+using MyGameList.Src.Features.Games;
 
 var builder = WebApplication.CreateBuilder(args);
 

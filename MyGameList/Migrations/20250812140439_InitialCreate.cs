@@ -16,7 +16,7 @@ namespace My_Game_List.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "games",
+                name: "game",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "int", nullable: false)
@@ -39,7 +39,7 @@ namespace My_Game_List.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "games");
+                name: "game");
         }
     }
 }
