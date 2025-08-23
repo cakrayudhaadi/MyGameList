@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MyGameList.Src.Features.Games.Dtos;
 using MyGameList.Src.Features.Games.Models;
 
-namespace MyGameList.Src.Features.Games
+namespace MyGameList.Src.Features.Games.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

@@ -1,4 +1,6 @@
-﻿namespace MyGameList.Src.Features.Games.Models
+﻿using MyGameList.Src.Features.Games.Models;
+
+namespace MyGameList.Src.Features.Games.Dtos
 {
     public class GameDto
     {
@@ -19,18 +21,17 @@
 
         public Game GamesDtoToModel(Game? game, int? id)
         {
-            if (game is null) {
-                game = new Game();
-            }
+            game ??= new Game();
+            DateTime timeNow = DateTime.UtcNow;
 
             game.Title = Title is not null ? Title : game.Title;
             game.Description = Description is not null ? Description : game.Description;
             if(!id.HasValue) {
-                game.CreatedAt = DateTime.UtcNow;
-                game.UpdatedAt = DateTime.UtcNow;
+                game.CreatedAt = timeNow;
+                game.UpdatedAt = timeNow;
             } else {
                 game.Id = id.Value;
-                game.UpdatedAt = DateTime.UtcNow;
+                game.UpdatedAt = timeNow;
             }
 
             return game;

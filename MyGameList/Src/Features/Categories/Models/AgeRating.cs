@@ -1,30 +1,34 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MyGameList.Src.Features.Games.Models
+namespace MyGameList.Src.Features.Categories.Models
 {
-    [Table("games")]
-    public class Game
+    [Table("age_ratings")]
+    public class AgeRating
     {
-        public Game()
+        public AgeRating()
         {
-            Title = string.Empty;
+            Rating = string.Empty;
+            AgeMinimum = 0;
         }
 
-        public Game(int id, string title, string? description, DateTime? createdAt, DateTime? updatedAt)
+        public AgeRating(int id, string rating, string? description, int ageMinimum, DateTime? createdAt, DateTime? updatedAt)
         {
             Id = id;
-            Title = title;
+            Rating = rating;
             Description = description;
+            AgeMinimum = ageMinimum;
             CreatedAt = createdAt;
             UpdatedAt = updatedAt;
         }
 
         [Column("id")]
         public int Id { get; set; }
-        [Column("title")]
-        public string Title { get; set; }
+        [Column("rating")]
+        public string Rating { get; set; }
         [Column("description")]
         public string? Description { get; set; }
+        [Column("age_minimum")]
+        public int AgeMinimum { get; set; }
         [Column("created_at")]
         public DateTime? CreatedAt { get; set; }
         [Column("updated_at")]

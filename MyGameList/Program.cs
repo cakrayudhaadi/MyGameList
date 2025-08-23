@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using MyGameList.Src.Features.Games;
+using MyGameList.Src.Features;
+using MyGameList.Src.Features.Categories;
+using MyGameList.Src.Features.Categories.Repositories;
+using MyGameList.Src.Features.Categories.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +16,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<MyGameListDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
         new MySqlServerVersion(new Version(8, 0, 21))));
+
+builder.Services.AddCategoryServices();
 
 var app = builder.Build();
 
