@@ -24,7 +24,7 @@ namespace MyGameList.Src.Features.Categories.Dtos
             {
                 Id = genre.Id,
                 Genre = genre.Option
-            }; ;
+            };
         }
     }
 }
