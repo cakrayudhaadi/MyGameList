@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyGameList.Src.Features.Categories.Dtos;
-using MyGameList.Src.Features.Categories.Models;
 using MyGameList.Src.Features.Categories.Services;
 using MyGameList.Src.Shared.Commons;
 using System.Net;

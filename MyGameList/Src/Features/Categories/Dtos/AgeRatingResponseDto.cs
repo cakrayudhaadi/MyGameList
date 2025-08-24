@@ -23,7 +23,7 @@ namespace MyGameList.Src.Features.Categories.Dtos
         public string? Description { get; set; }
         public int AgeMinimum { get; set; }
 
-        public static AgeRatingResponseDto AgeRatingModelToResponseDtoDetail(AgeRating ageRating)
+        public static AgeRatingResponseDto AgeRatingModelToResponseDto(AgeRating ageRating)
         {
             return new()
             {
@@ -34,7 +34,7 @@ namespace MyGameList.Src.Features.Categories.Dtos
             };
         }
 
-        public static AgeRatingResponseDto AgeRatingModelToResponseDto(AgeRating ageRating)
+        public static AgeRatingResponseDto AgeRatingModelAsOptions(AgeRating ageRating)
         {
             return new()
             {

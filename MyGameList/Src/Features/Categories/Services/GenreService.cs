@@ -1,7 +1,4 @@
-﻿using Humanizer.Localisation;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using MyGameList.Src.Features.Categories.Dtos;
+﻿using MyGameList.Src.Features.Categories.Dtos;
 using MyGameList.Src.Features.Categories.Models;
 using MyGameList.Src.Features.Categories.Repositories;
 using MyGameList.Src.Shared.Commons;
