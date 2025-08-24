@@ -1,8 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Microsoft.CodeAnalysis.Options;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyGameList.Src.Features.Categories.Models
 {
     [Table("age_ratings")]
+    [Index(nameof(Rating), IsUnique = true)]
     public class AgeRating
     {
         public AgeRating()
@@ -22,12 +26,15 @@ namespace MyGameList.Src.Features.Categories.Models
         }
 
         [Column("id")]
+        [Key]
         public int Id { get; set; }
         [Column("rating")]
+        [Required]
         public string Rating { get; set; }
         [Column("description")]
         public string? Description { get; set; }
         [Column("age_minimum")]
+        [Required]
         public int AgeMinimum { get; set; }
         [Column("created_at")]
         public DateTime? CreatedAt { get; set; }

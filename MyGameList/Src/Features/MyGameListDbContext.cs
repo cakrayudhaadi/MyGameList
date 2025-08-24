@@ -5,8 +5,13 @@ using System.Text.RegularExpressions;
 
 namespace MyGameList.Src.Features
 {
-    public partial class MyGameListDbContext(DbContextOptions<MyGameListDbContext> options) : DbContext(options)
+    public partial class MyGameListDbContext : DbContext
     {
+        public MyGameListDbContext(DbContextOptions<MyGameListDbContext> options) : base(options)
+        {
+            Database.EnsureCreated();
+        }
+
         //Categories
         public DbSet<AgeRating> AgeRating => Set<AgeRating>();
         public DbSet<Gender> Gender => Set<Gender>();
