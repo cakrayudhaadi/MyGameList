@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyGameList.Src.Features.Categories.Models;
 using MyGameList.Src.Features.Games.Models;
-using System.Text.RegularExpressions;
 
 namespace MyGameList.Src.Features
 {

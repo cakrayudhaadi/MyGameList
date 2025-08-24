@@ -1,5 +1,4 @@
 ﻿using MyGameList.Src.Features.Categories.Models;
-using MyGameList.Src.Features.Games.Models;
 
 namespace MyGameList.Src.Features.Categories.Dtos
 {
