@@ -8,55 +8,55 @@ namespace MyGameList.Src.Features.Categories.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GenreController(IGenreService genreService) : ControllerBase
+    public class ModeController(IModeService modeService) : ControllerBase
     {
         private readonly ResponseHandler res = new();
 
         [HttpPost]
-        public async Task<ActionResult<ApiResponse<GenreResponseDto>>> AddGenre(GenreDto genreDto)
+        public async Task<ActionResult<ApiResponse<ModeResponseDto>>> AddMode(ModeDto modeDto)
         {
             try
             {
-                return res.Result<GenreResponseDto>(await genreService.AddGenreAsync(genreDto));
+                return res.Result<ModeResponseDto>(await modeService.AddModeAsync(modeDto));
             }
             catch (ArgumentException ex)
             {
-                return res.Result<GenreResponseDto>(HttpStatusCode.InternalServerError, ex.Message, null);
+                return res.Result<ModeResponseDto>(HttpStatusCode.InternalServerError, ex.Message, null);
             }
         }
 
         [HttpGet]
-        public async Task<ActionResult<ApiResponse<List<GenreResponseDto>>>> GetAllGenres()
+        public async Task<ActionResult<ApiResponse<List<ModeResponseDto>>>> GetAllModes()
         {
             try
             {
-                return res.Result<List<GenreResponseDto>>(await genreService.GetAllGenresAsync());
+                return res.Result<List<ModeResponseDto>>(await modeService.GetAllModesAsync());
             }
             catch (ArgumentException ex)
             {
-                return res.Result<List<GenreResponseDto>>(HttpStatusCode.InternalServerError, ex.Message, null);
+                return res.Result<List<ModeResponseDto>>(HttpStatusCode.InternalServerError, ex.Message, null);
             }
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ApiResponse<GenreResponseDto>>> GetGenreById(int id)
+        public async Task<ActionResult<ApiResponse<ModeResponseDto>>> GetModeById(int id)
         {
             try
             {
-                return res.Result<GenreResponseDto>(await genreService.GetGenreByIdAsync(id));
+                return res.Result<ModeResponseDto>(await modeService.GetModeByIdAsync(id));
             }
             catch (ArgumentException ex)
             {
-                return res.Result<GenreResponseDto>(HttpStatusCode.InternalServerError, ex.Message, null);
+                return res.Result<ModeResponseDto>(HttpStatusCode.InternalServerError, ex.Message, null);
             }
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<ApiResponse>> UpdateGenre(int id, GenreDto genreDto)
+        public async Task<ActionResult<ApiResponse>> UpdateMode(int id, ModeDto modeDto)
         {
             try
             {
-                return res.Result(await genreService.UpdateGenreAsync(id, genreDto));
+                return res.Result(await modeService.UpdateModeAsync(id, modeDto));
             }
             catch (ArgumentException ex)
             {
@@ -65,11 +65,11 @@ namespace MyGameList.Src.Features.Categories.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<ApiResponse>> DeleteGenre(int id)
+        public async Task<ActionResult<ApiResponse>> DeleteMode(int id)
         {
             try
             {
-                return res.Result(await genreService.DeleteGenreAsync(id));
+                return res.Result(await modeService.DeleteModeAsync(id));
             }
             catch (ArgumentException ex)
             {

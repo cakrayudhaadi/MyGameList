@@ -1,9 +1,11 @@
-﻿using Microsoft.CodeAnalysis.Options;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyGameList.Src.Features.Categories.Models
 {
     [Table("genders")]
+    [Index(nameof(Option), IsUnique = true)]
     public class Gender
     {
         public Gender()
@@ -20,8 +22,10 @@ namespace MyGameList.Src.Features.Categories.Models
         }
 
         [Column("id")]
+        [Key]
         public int Id { get; set; }
         [Column("option")]
+        [Required]
         public string Option { get; set; }
         [Column("created_at")]
         public DateTime? CreatedAt { get; set; }

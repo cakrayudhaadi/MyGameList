@@ -1,5 +1,4 @@
 ﻿using MyGameList.Src.Features.Categories.Models;
-using MyGameList.Src.Features.Games.Models;
 
 namespace MyGameList.Src.Features.Categories.Dtos
 {
@@ -35,6 +34,14 @@ namespace MyGameList.Src.Features.Categories.Dtos
             }
 
             return genre;
+        }
+
+        public string? GenreValidation()
+        {
+            if (string.IsNullOrEmpty(Genre))
+                return "Genre are required";
+
+            return null;
         }
     }
 }
