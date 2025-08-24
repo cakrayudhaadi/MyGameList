@@ -21,8 +21,9 @@ namespace MyGameList.Src.Features.Categories.Services
         {
             ArgumentNullException.ThrowIfNull(genderDto);
 
-            if (string.IsNullOrEmpty(genderDto.Gender))
-                return new Response<GenderResponseDto>(HttpStatusCode.BadRequest, "Gender are required.", null);
+            string? errValidation = genderDto.GenderValidation();
+            if (errValidation is not null)
+                return new Response<GenderResponseDto>(HttpStatusCode.BadRequest, errValidation, null);
 
             Gender? duplicate = await genderRepo.GetGenderByOptionAsync(genderDto.Gender);
             if (duplicate is not null)

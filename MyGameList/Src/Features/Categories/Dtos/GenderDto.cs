@@ -35,5 +35,13 @@ namespace MyGameList.Src.Features.Categories.Dtos
 
             return gender;
         }
+
+        public string? GenderValidation()
+        {
+            if (string.IsNullOrEmpty(Gender))
+                return "Gender are required";
+
+            return null;
+        }
     }
 }

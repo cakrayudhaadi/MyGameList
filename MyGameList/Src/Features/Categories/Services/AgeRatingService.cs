@@ -21,8 +21,9 @@ namespace MyGameList.Src.Features.Categories.Services
         {
             ArgumentNullException.ThrowIfNull(ageRatingDto);
 
-            if (string.IsNullOrEmpty(ageRatingDto.Rating))
-                return new Response<AgeRatingResponseDto>(HttpStatusCode.BadRequest, "Rating are required.", null);
+            string? errValidation = ageRatingDto.AgeRatingValidation();
+            if (errValidation is not null)
+                return new Response<AgeRatingResponseDto>(HttpStatusCode.BadRequest, errValidation, null);
 
             AgeRating? duplicate = await ageRatingRepo.GetAgeRatingByRatingAsync(ageRatingDto.Rating);
             if (duplicate is not null)

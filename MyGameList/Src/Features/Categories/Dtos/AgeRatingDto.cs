@@ -1,4 +1,5 @@
-﻿using MyGameList.Src.Features.Categories.Models;
+﻿using Microsoft.Extensions.Logging.Abstractions;
+using MyGameList.Src.Features.Categories.Models;
 
 namespace MyGameList.Src.Features.Categories.Dtos
 {
@@ -41,6 +42,14 @@ namespace MyGameList.Src.Features.Categories.Dtos
             }
 
             return ageRating;
+        }
+
+        public string? AgeRatingValidation()
+        {
+            if (string.IsNullOrEmpty(Rating))
+                return "Rating are required";
+
+            return null;
         }
     }
 }

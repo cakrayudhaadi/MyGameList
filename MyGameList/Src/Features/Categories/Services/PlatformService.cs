@@ -21,8 +21,9 @@ namespace MyGameList.Src.Features.Categories.Services
         {
             ArgumentNullException.ThrowIfNull(platformDto);
 
-            if (string.IsNullOrEmpty(platformDto.Platform))
-                return new Response<PlatformResponseDto>(HttpStatusCode.BadRequest, "Platform are required.", null);
+            string? errValidation = platformDto.PlatformValidation();
+            if (errValidation is not null)
+                return new Response<PlatformResponseDto>(HttpStatusCode.BadRequest, errValidation, null);
 
             Platform? duplicate = await platformRepo.GetPlatformByOptionAsync(platformDto.Platform);
             if (duplicate is not null)

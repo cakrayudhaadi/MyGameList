@@ -21,8 +21,9 @@ namespace MyGameList.Src.Features.Categories.Services
         {
             ArgumentNullException.ThrowIfNull(genreDto);
 
-            if (string.IsNullOrEmpty(genreDto.Genre))
-                return new Response<GenreResponseDto>(HttpStatusCode.BadRequest, "Genre are required.", null);
+            string? errValidation = genreDto.GenreValidation();
+            if (errValidation is not null)
+                return new Response<GenreResponseDto>(HttpStatusCode.BadRequest, errValidation, null);
 
             Genre? duplicate = await genreRepo.GetGenreByOptionAsync(genreDto.Genre);
             if (duplicate is not null)

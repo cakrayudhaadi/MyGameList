@@ -35,5 +35,13 @@ namespace MyGameList.Src.Features.Categories.Dtos
 
             return genre;
         }
+
+        public string? GenreValidation()
+        {
+            if (string.IsNullOrEmpty(Genre))
+                return "Genre are required";
+
+            return null;
+        }
     }
 }

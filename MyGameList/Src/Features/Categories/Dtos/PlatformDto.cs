@@ -35,5 +35,13 @@ namespace MyGameList.Src.Features.Categories.Dtos
 
             return platform;
         }
+
+        public string? PlatformValidation()
+        {
+            if (string.IsNullOrEmpty(Platform))
+                return "Platform are required";
+
+            return null;
+        }
     }
 }

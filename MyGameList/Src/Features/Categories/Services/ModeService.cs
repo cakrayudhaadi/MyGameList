@@ -21,8 +21,9 @@ namespace MyGameList.Src.Features.Categories.Services
         {
             ArgumentNullException.ThrowIfNull(modeDto);
 
-            if (string.IsNullOrEmpty(modeDto.Mode))
-                return new Response<ModeResponseDto>(HttpStatusCode.BadRequest, "Mode are required.", null);
+            string? errValidation = modeDto.ModeValidation();
+            if (errValidation is not null)
+                return new Response<ModeResponseDto>(HttpStatusCode.BadRequest, errValidation, null);
 
             Mode? duplicate = await modeRepo.GetModeByOptionAsync(modeDto.Mode);
             if (duplicate is not null)

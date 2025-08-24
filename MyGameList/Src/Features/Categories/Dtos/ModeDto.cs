@@ -35,5 +35,13 @@ namespace MyGameList.Src.Features.Categories.Dtos
 
             return mode;
         }
+
+        public string? ModeValidation()
+        {
+            if (string.IsNullOrEmpty(Mode))
+                return "Mode are required";
+
+            return null;
+        }
     }
 }
