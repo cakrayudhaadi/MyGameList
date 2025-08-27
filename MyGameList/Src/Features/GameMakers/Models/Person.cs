@@ -1,6 +1,6 @@
 ﻿namespace MyGameList.Src.Features.GameMakers.Models
 {
-    public class People
+    public class Person
     {
     }
 }

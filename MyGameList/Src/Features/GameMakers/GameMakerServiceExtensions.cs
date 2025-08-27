@@ -9,8 +9,8 @@ namespace MyGameList.Src.Features.GameMakers
         {
             services.AddScoped<IDeveloperRepository, DeveloperRepository>();
             services.AddScoped<IDeveloperService, DeveloperService>();
-            services.AddScoped<IPeopleRepository, PeopleRepository>();
-            services.AddScoped<IPeopleService, PeopleService>();
+            services.AddScoped<IPersonRepository, PersonRepository>();
+            services.AddScoped<IPersonService, PersonService>();
             services.AddScoped<IPublisherRepository, PublisherRepository>();
             services.AddScoped<IPublisherService, PublisherService>();
 

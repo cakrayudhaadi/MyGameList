@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyGameList.Src.Features.Categories.Models;
+using MyGameList.Src.Features.GameMakers.Models;
 using MyGameList.Src.Features.Games.Models;
 
 namespace MyGameList.Src.Features
@@ -11,14 +12,19 @@ namespace MyGameList.Src.Features
             Database.EnsureCreated();
         }
 
-        //Categories
+        // Categories
         public DbSet<AgeRating> AgeRating => Set<AgeRating>();
         public DbSet<Gender> Gender => Set<Gender>();
         public DbSet<Genre> Genre => Set<Genre>();
         public DbSet<Mode> Mode => Set<Mode>();
         public DbSet<Platform> Platform => Set<Platform>();
 
-        //Games
+        // Game Makers
+        public DbSet<Developer> Developer => Set<Developer>();
+        //public DbSet<Person> Person => Set<Person>();
+        public DbSet<Publisher> Publisher => Set<Publisher>();
+
+        // Games
         public DbSet<Game> Game => Set<Game>();
     }
 }

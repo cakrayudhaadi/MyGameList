@@ -5,7 +5,7 @@ namespace MyGameList.Src.Features.GameMakers.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PeopleController(IPeopleService peopleService) : ControllerBase
+    public class PersonController(IPersonService personService) : ControllerBase
     {
     }
 }

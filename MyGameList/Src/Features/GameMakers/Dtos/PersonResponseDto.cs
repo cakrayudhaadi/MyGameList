@@ -1,6 +1,6 @@
 ﻿namespace MyGameList.Src.Features.GameMakers.Dtos
 {
-    public class PeopleResponseDto
+    public class PersonResponseDto
     {
     }
 }

@@ -13,13 +13,13 @@ namespace MyGameList.Src.Features.GameMakers.Models
             Name = string.Empty;
         }
 
-        public Developer(int id, string name, string? description, DateTime? establishedAt,
+        public Developer(int id, string name, string? description, int? establishedIn,
             string? website, DateTime? createdAt, DateTime? updatedAt)
         {
             Id = id;
             Name = name;
             Description = description;
-            EstablishedAt = establishedAt;
+            EstablishedIn = establishedIn;
             Website = website;
             CreatedAt = createdAt;
             UpdatedAt = updatedAt;
@@ -33,9 +33,9 @@ namespace MyGameList.Src.Features.GameMakers.Models
         public string Name { get; set; }
         [Column("description")]
         public string? Description { get; set; }
-        [Column("established_at")]
+        [Column("established_in")]
         [Required]
-        public DateTime? EstablishedAt { get; set; }
+        public int? EstablishedIn { get; set; }
         [Column("website")]
         public string? Website { get; set; }
         [Column("created_at")]

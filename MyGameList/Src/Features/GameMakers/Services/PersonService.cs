@@ -2,11 +2,11 @@
 
 namespace MyGameList.Src.Features.GameMakers.Services
 {
-    public interface IPeopleService
+    public interface IPersonService
     {
     }
 
-    public class PeopleService(IPeopleRepository peopleRepo) : IPeopleService
+    public class PersonService(IPersonRepository personRepo) : IPersonService
     {
     }
 }
