@@ -35,7 +35,7 @@ namespace MyGameList.Src.Features.Categories.Repositories
 
         public async Task<Genre?> GetGenreByOptionAsync(string option)
         {
-            return await context.Genre.FirstOrDefaultAsync(g => g.Option == option);
+            return await context.Genre.FirstOrDefaultAsync(genre => genre.Option == option);
         }
 
         public async Task UpdateGenreAsync(Genre genre)

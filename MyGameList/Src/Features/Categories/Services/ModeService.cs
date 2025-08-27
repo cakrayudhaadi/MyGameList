@@ -31,9 +31,9 @@ namespace MyGameList.Src.Features.Categories.Services
 
             Mode mode = modeDto.ModeDtoToModel(null, null);
             Mode newMode = await modeRepo.AddAsync(mode);
-            ModeResponseDto modeResponseDtos = ModeResponseDto.ModeModelToResponseDto(newMode);
+            ModeResponseDto modeResponseDto = ModeResponseDto.ModeModelToResponseDto(newMode);
 
-            return new Response<ModeResponseDto>(HttpStatusCode.OK, "Mode created successfully.", modeResponseDtos);
+            return new Response<ModeResponseDto>(HttpStatusCode.OK, "Mode created successfully.", modeResponseDto);
         }
 
         public async Task<Response<List<ModeResponseDto>>> GetAllModesAsync()
@@ -50,9 +50,9 @@ namespace MyGameList.Src.Features.Categories.Services
             if (mode is null)
                 return new Response<ModeResponseDto>(HttpStatusCode.NotFound, "Mode not found.", null);
 
-            ModeResponseDto modeResponseDtos = ModeResponseDto.ModeModelToResponseDto(mode);
+            ModeResponseDto modeResponseDto = ModeResponseDto.ModeModelToResponseDto(mode);
 
-            return new Response<ModeResponseDto>(HttpStatusCode.OK, HttpStatusCode.OK.ToString(), modeResponseDtos);
+            return new Response<ModeResponseDto>(HttpStatusCode.OK, HttpStatusCode.OK.ToString(), modeResponseDto);
         }
 
         public async Task<Response> UpdateModeAsync(int id, ModeDto modeDto)

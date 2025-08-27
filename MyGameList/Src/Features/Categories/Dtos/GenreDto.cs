@@ -39,7 +39,7 @@ namespace MyGameList.Src.Features.Categories.Dtos
         public string? GenreValidation()
         {
             if (string.IsNullOrEmpty(Genre))
-                return "Genre are required";
+                return "Genre is required";
 
             return null;
         }

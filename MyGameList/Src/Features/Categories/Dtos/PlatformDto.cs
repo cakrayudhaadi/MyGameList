@@ -39,7 +39,7 @@ namespace MyGameList.Src.Features.Categories.Dtos
         public string? PlatformValidation()
         {
             if (string.IsNullOrEmpty(Platform))
-                return "Platform are required";
+                return "Platform is required";
 
             return null;
         }

@@ -35,7 +35,7 @@ namespace MyGameList.Src.Features.Categories.Repositories
 
         public async Task<Mode?> GetModeByOptionAsync(string option)
         {
-            return await context.Mode.FirstOrDefaultAsync(g => g.Option == option);
+            return await context.Mode.FirstOrDefaultAsync(mode => mode.Option == option);
         }
 
         public async Task UpdateModeAsync(Mode mode)
