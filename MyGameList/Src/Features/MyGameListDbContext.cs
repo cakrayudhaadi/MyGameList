@@ -27,6 +27,10 @@ namespace MyGameList.Src.Features
         // Games
         public DbSet<Game> Game => Set<Game>();
 
+        // Users
+
+        // Characters
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Person>()
