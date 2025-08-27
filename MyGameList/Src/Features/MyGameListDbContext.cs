@@ -21,10 +21,20 @@ namespace MyGameList.Src.Features
 
         // Game Makers
         public DbSet<Developer> Developer => Set<Developer>();
-        //public DbSet<Person> Person => Set<Person>();
+        public DbSet<Person> Person => Set<Person>();
         public DbSet<Publisher> Publisher => Set<Publisher>();
 
         // Games
         public DbSet<Game> Game => Set<Game>();
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Person>()
+                .HasOne(p => p.Gender)
+                .WithMany(g => g.People)
+                .HasForeignKey(p => p.GenderId);
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

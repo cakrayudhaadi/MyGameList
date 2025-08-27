@@ -31,9 +31,9 @@ namespace MyGameList.Src.Features.GameMakers.Services
 
             Developer developer = developerDto.DeveloperDtoToModel(null, null);
             Developer newDeveloper = await developerRepo.AddAsync(developer);
-            DeveloperResponseDto developerResponseDtos = DeveloperResponseDto.DeveloperModelToResponseDto(newDeveloper);
+            DeveloperResponseDto developerResponseDto = DeveloperResponseDto.DeveloperModelToResponseDto(newDeveloper);
 
-            return new Response<DeveloperResponseDto>(HttpStatusCode.OK, "Developer created successfully.", developerResponseDtos);
+            return new Response<DeveloperResponseDto>(HttpStatusCode.OK, "Developer created successfully.", developerResponseDto);
         }
 
         public async Task<Response<List<DeveloperResponseDto>>> GetAllDevelopersAsync()
@@ -50,9 +50,9 @@ namespace MyGameList.Src.Features.GameMakers.Services
             if (developer is null)
                 return new Response<DeveloperResponseDto>(HttpStatusCode.NotFound, "Developer not found.", null);
 
-            DeveloperResponseDto developerResponseDtos = DeveloperResponseDto.DeveloperModelToResponseDto(developer);
+            DeveloperResponseDto developerResponseDto = DeveloperResponseDto.DeveloperModelToResponseDto(developer);
 
-            return new Response<DeveloperResponseDto>(HttpStatusCode.OK, HttpStatusCode.OK.ToString(), developerResponseDtos);
+            return new Response<DeveloperResponseDto>(HttpStatusCode.OK, HttpStatusCode.OK.ToString(), developerResponseDto);
         }
 
         public async Task<Response> UpdateDeveloperAsync(int id, DeveloperDto developerDto)

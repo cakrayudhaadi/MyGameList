@@ -35,7 +35,7 @@ namespace MyGameList.Src.Features.Categories.Repositories
 
         public async Task<AgeRating?> GetAgeRatingByRatingAsync(string rating)
         {
-            return await context.AgeRating.FirstOrDefaultAsync(g => g.Rating == rating);
+            return await context.AgeRating.FirstOrDefaultAsync(ageRating => ageRating.Rating == rating);
         }
 
         public async Task UpdateAgeRatingAsync(AgeRating ageRating)

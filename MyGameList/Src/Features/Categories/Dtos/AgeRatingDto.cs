@@ -47,7 +47,7 @@ namespace MyGameList.Src.Features.Categories.Dtos
         public string? AgeRatingValidation()
         {
             if (string.IsNullOrEmpty(Rating))
-                return "Rating are required";
+                return "Rating is required";
 
             return null;
         }

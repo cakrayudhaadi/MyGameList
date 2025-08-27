@@ -35,7 +35,7 @@ namespace MyGameList.Src.Features.GameMakers.Repositories
 
         public async Task<Developer?> GetDeveloperByNameAsync(string name)
         {
-            return await context.Developer.FirstOrDefaultAsync(g => g.Name == name);
+            return await context.Developer.FirstOrDefaultAsync(developer => developer.Name == name);
         }
 
         public async Task UpdateDeveloperAsync(Developer developer)

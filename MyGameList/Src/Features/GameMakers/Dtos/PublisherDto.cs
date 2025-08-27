@@ -48,7 +48,7 @@ namespace MyGameList.Src.Features.GameMakers.Dtos
         public string? PublisherValidation()
         {
             if (string.IsNullOrEmpty(Name))
-                return "Name are required";
+                return "Name is required";
 
             return null;
         }

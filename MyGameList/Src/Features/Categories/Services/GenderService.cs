@@ -31,9 +31,9 @@ namespace MyGameList.Src.Features.Categories.Services
 
             Gender gender = genderDto.GenderDtoToModel(null, null);
             Gender newGender = await genderRepo.AddAsync(gender);
-            GenderResponseDto genderResponseDtos = GenderResponseDto.GenderModelToResponseDto(newGender);
+            GenderResponseDto genderResponseDto = GenderResponseDto.GenderModelToResponseDto(newGender);
 
-            return new Response<GenderResponseDto>(HttpStatusCode.OK, "Gender created successfully.", genderResponseDtos);
+            return new Response<GenderResponseDto>(HttpStatusCode.OK, "Gender created successfully.", genderResponseDto);
         }
 
         public async Task<Response<List<GenderResponseDto>>> GetAllGendersAsync()
@@ -50,9 +50,9 @@ namespace MyGameList.Src.Features.Categories.Services
             if (gender is null)
                 return new Response<GenderResponseDto>(HttpStatusCode.NotFound, "Gender not found.", null);
 
-            GenderResponseDto genderResponseDtos = GenderResponseDto.GenderModelToResponseDto(gender);
+            GenderResponseDto genderResponseDto = GenderResponseDto.GenderModelToResponseDto(gender);
 
-            return new Response<GenderResponseDto>(HttpStatusCode.OK, HttpStatusCode.OK.ToString(), genderResponseDtos);
+            return new Response<GenderResponseDto>(HttpStatusCode.OK, HttpStatusCode.OK.ToString(), genderResponseDto);
         }
 
         public async Task<Response> UpdateGenderAsync(int id, GenderDto genderDto)

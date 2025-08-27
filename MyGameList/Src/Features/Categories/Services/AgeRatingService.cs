@@ -31,9 +31,9 @@ namespace MyGameList.Src.Features.Categories.Services
 
             AgeRating ageRating = ageRatingDto.AgeRatingDtoToModel(null, null);
             AgeRating newAgeRating = await ageRatingRepo.AddAsync(ageRating);
-            AgeRatingResponseDto ageRatingResponseDtos = AgeRatingResponseDto.AgeRatingModelToResponseDto(newAgeRating);
+            AgeRatingResponseDto ageRatingResponseDto = AgeRatingResponseDto.AgeRatingModelToResponseDto(newAgeRating);
 
-            return new Response<AgeRatingResponseDto>(HttpStatusCode.OK, "AgeRating created successfully.", ageRatingResponseDtos);
+            return new Response<AgeRatingResponseDto>(HttpStatusCode.OK, "AgeRating created successfully.", ageRatingResponseDto);
         }
 
         public async Task<Response<List<AgeRatingResponseDto>>> GetAllAgeRatingsAsync()
@@ -50,9 +50,9 @@ namespace MyGameList.Src.Features.Categories.Services
             if (ageRating is null)
                 return new Response<AgeRatingResponseDto>(HttpStatusCode.NotFound, "AgeRating not found.", null);
 
-            AgeRatingResponseDto ageRatingResponseDtos = AgeRatingResponseDto.AgeRatingModelToResponseDto(ageRating);
+            AgeRatingResponseDto ageRatingResponseDto = AgeRatingResponseDto.AgeRatingModelToResponseDto(ageRating);
 
-            return new Response<AgeRatingResponseDto>(HttpStatusCode.OK, HttpStatusCode.OK.ToString(), ageRatingResponseDtos);
+            return new Response<AgeRatingResponseDto>(HttpStatusCode.OK, HttpStatusCode.OK.ToString(), ageRatingResponseDto);
         }
 
         public async Task<Response> UpdateAgeRatingAsync(int id, AgeRatingDto ageRatingDto)

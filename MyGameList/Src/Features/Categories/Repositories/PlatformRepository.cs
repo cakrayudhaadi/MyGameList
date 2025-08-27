@@ -35,7 +35,7 @@ namespace MyGameList.Src.Features.Categories.Repositories
 
         public async Task<Platform?> GetPlatformByOptionAsync(string option)
         {
-            return await context.Platform.FirstOrDefaultAsync(g => g.Option == option);
+            return await context.Platform.FirstOrDefaultAsync(platform => platform.Option == option);
         }
 
         public async Task UpdatePlatformAsync(Platform platform)

@@ -31,9 +31,9 @@ namespace MyGameList.Src.Features.Categories.Services
 
             Platform platform = platformDto.PlatformDtoToModel(null, null);
             Platform newPlatform = await platformRepo.AddAsync(platform);
-            PlatformResponseDto platformResponseDtos = PlatformResponseDto.PlatformModelToResponseDto(newPlatform);
+            PlatformResponseDto platformResponseDto = PlatformResponseDto.PlatformModelToResponseDto(newPlatform);
 
-            return new Response<PlatformResponseDto>(HttpStatusCode.OK, "Platform created successfully.", platformResponseDtos);
+            return new Response<PlatformResponseDto>(HttpStatusCode.OK, "Platform created successfully.", platformResponseDto);
         }
 
         public async Task<Response<List<PlatformResponseDto>>> GetAllPlatformsAsync()
@@ -50,9 +50,9 @@ namespace MyGameList.Src.Features.Categories.Services
             if (platform is null)
                 return new Response<PlatformResponseDto>(HttpStatusCode.NotFound, "Platform not found.", null);
 
-            PlatformResponseDto platformResponseDtos = PlatformResponseDto.PlatformModelToResponseDto(platform);
+            PlatformResponseDto platformResponseDto = PlatformResponseDto.PlatformModelToResponseDto(platform);
 
-            return new Response<PlatformResponseDto>(HttpStatusCode.OK, HttpStatusCode.OK.ToString(), platformResponseDtos);
+            return new Response<PlatformResponseDto>(HttpStatusCode.OK, HttpStatusCode.OK.ToString(), platformResponseDto);
         }
 
         public async Task<Response> UpdatePlatformAsync(int id, PlatformDto platformDto)

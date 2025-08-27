@@ -39,7 +39,7 @@ namespace MyGameList.Src.Features.Categories.Dtos
         public string? GenderValidation()
         {
             if (string.IsNullOrEmpty(Gender))
-                return "Gender are required";
+                return "Gender is required";
 
             return null;
         }

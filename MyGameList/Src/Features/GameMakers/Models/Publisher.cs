@@ -28,7 +28,7 @@ namespace MyGameList.Src.Features.GameMakers.Models
         [Column("id")]
         [Key]
         public int Id { get; set; }
-        [Column("rating")]
+        [Column("name")]
         [Required]
         public string Name { get; set; }
         [Column("description")]

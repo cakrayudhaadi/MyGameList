@@ -31,9 +31,9 @@ namespace MyGameList.Src.Features.GameMakers.Services
 
             Publisher publisher = publisherDto.PublisherDtoToModel(null, null);
             Publisher newPublisher = await publisherRepo.AddAsync(publisher);
-            PublisherResponseDto publisherResponseDtos = PublisherResponseDto.PublisherModelToResponseDto(newPublisher);
+            PublisherResponseDto publisherResponseDto = PublisherResponseDto.PublisherModelToResponseDto(newPublisher);
 
-            return new Response<PublisherResponseDto>(HttpStatusCode.OK, "Publisher created successfully.", publisherResponseDtos);
+            return new Response<PublisherResponseDto>(HttpStatusCode.OK, "Publisher created successfully.", publisherResponseDto);
         }
 
         public async Task<Response<List<PublisherResponseDto>>> GetAllPublishersAsync()
@@ -50,9 +50,9 @@ namespace MyGameList.Src.Features.GameMakers.Services
             if (publisher is null)
                 return new Response<PublisherResponseDto>(HttpStatusCode.NotFound, "Publisher not found.", null);
 
-            PublisherResponseDto publisherResponseDtos = PublisherResponseDto.PublisherModelToResponseDto(publisher);
+            PublisherResponseDto publisherResponseDto = PublisherResponseDto.PublisherModelToResponseDto(publisher);
 
-            return new Response<PublisherResponseDto>(HttpStatusCode.OK, HttpStatusCode.OK.ToString(), publisherResponseDtos);
+            return new Response<PublisherResponseDto>(HttpStatusCode.OK, HttpStatusCode.OK.ToString(), publisherResponseDto);
         }
 
         public async Task<Response> UpdatePublisherAsync(int id, PublisherDto publisherDto)

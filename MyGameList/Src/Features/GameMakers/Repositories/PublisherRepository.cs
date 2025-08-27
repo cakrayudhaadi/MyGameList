@@ -35,7 +35,7 @@ namespace MyGameList.Src.Features.GameMakers.Repositories
 
         public async Task<Publisher?> GetPublisherByNameAsync(string name)
         {
-            return await context.Publisher.FirstOrDefaultAsync(g => g.Name == name);
+            return await context.Publisher.FirstOrDefaultAsync(publisher => publisher.Name == name);
         }
 
         public async Task UpdatePublisherAsync(Publisher publisher)

@@ -2,31 +2,34 @@
 using System.Text.Json.Serialization;
 using System.Globalization;
 
-public class CustomDateFormatConverter : JsonConverter<DateTime?>
+namespace MyGameList.Src.Shared.Commons
 {
-    private const string DateFormat = "yyyy-MM-dd";
-
-    public override DateTime? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public class CustomDateFormatConverter : JsonConverter<DateTime?>
     {
-        if (reader.TokenType == JsonTokenType.String)
+        private const string DateFormat = "yyyy-MM-dd";
+
+        public override DateTime? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            if (DateTime.TryParseExact(reader.GetString(), DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
+            if (reader.TokenType == JsonTokenType.String)
             {
-                return date;
+                if (DateTime.TryParseExact(reader.GetString(), DateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
+                {
+                    return date;
+                }
             }
+            return null;
         }
-        return null;
-    }
 
-    public override void Write(Utf8JsonWriter writer, DateTime? value, JsonSerializerOptions options)
-    {
-        if (value.HasValue)
+        public override void Write(Utf8JsonWriter writer, DateTime? value, JsonSerializerOptions options)
         {
-            writer.WriteStringValue(value.Value.ToString(DateFormat));
-        }
-        else
-        {
-            writer.WriteNullValue();
+            if (value.HasValue)
+            {
+                writer.WriteStringValue(value.Value.ToString(DateFormat));
+            }
+            else
+            {
+                writer.WriteNullValue();
+            }
         }
     }
 }

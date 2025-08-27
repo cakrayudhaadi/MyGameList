@@ -35,7 +35,7 @@ namespace MyGameList.Src.Features.Categories.Repositories
 
         public async Task<Gender?> GetGenderByOptionAsync(string option)
         {
-            return await context.Gender.FirstOrDefaultAsync(g => g.Option == option);
+            return await context.Gender.FirstOrDefaultAsync(gender => gender.Option == option);
         }
 
         public async Task UpdateGenderAsync(Gender gender)
