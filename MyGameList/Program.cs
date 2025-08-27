@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MyGameList.Src.Features;
 using MyGameList.Src.Features.Categories;
+using MyGameList.Src.Features.GameMakers;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,7 +21,9 @@ builder.Services.AddDbContext<MyGameListDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
         new MySqlServerVersion(new Version(8, 0, 21))));
 
+// Add application services
 builder.Services.AddCategoryServices();
+builder.Services.AddGameMakerServices();
 
 var app = builder.Build();
 

@@ -31,9 +31,9 @@ namespace MyGameList.Src.Features.Categories.Services
 
             Genre genre = genreDto.GenreDtoToModel(null, null);
             Genre newGenre = await genreRepo.AddAsync(genre);
-            GenreResponseDto genreResponseDtos = GenreResponseDto.GenreModelToResponseDto(newGenre);
+            GenreResponseDto genreResponseDto = GenreResponseDto.GenreModelToResponseDto(newGenre);
 
-            return new Response<GenreResponseDto>(HttpStatusCode.OK, "Genre created successfully.", genreResponseDtos);
+            return new Response<GenreResponseDto>(HttpStatusCode.OK, "Genre created successfully.", genreResponseDto);
         }
 
         public async Task<Response<List<GenreResponseDto>>> GetAllGenresAsync()
@@ -50,9 +50,9 @@ namespace MyGameList.Src.Features.Categories.Services
             if (genre is null)
                 return new Response<GenreResponseDto>(HttpStatusCode.NotFound, "Genre not found.", null);
 
-            GenreResponseDto genreResponseDtos = GenreResponseDto.GenreModelToResponseDto(genre);
+            GenreResponseDto genreResponseDto = GenreResponseDto.GenreModelToResponseDto(genre);
 
-            return new Response<GenreResponseDto>(HttpStatusCode.OK, HttpStatusCode.OK.ToString(), genreResponseDtos);
+            return new Response<GenreResponseDto>(HttpStatusCode.OK, HttpStatusCode.OK.ToString(), genreResponseDto);
         }
 
         public async Task<Response> UpdateGenreAsync(int id, GenreDto genreDto)

@@ -39,7 +39,7 @@ namespace MyGameList.Src.Features.Categories.Dtos
         public string? ModeValidation()
         {
             if (string.IsNullOrEmpty(Mode))
-                return "Mode are required";
+                return "Mode is required";
 
             return null;
         }

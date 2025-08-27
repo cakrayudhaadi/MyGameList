@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyGameList.Src.Features;
 
@@ -11,9 +12,11 @@ using MyGameList.Src.Features;
 namespace MyGameList.Migrations
 {
     [DbContext(typeof(MyGameListDbContext))]
-    partial class MyGameListDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250827124505_AddDevelopersAndPublishers")]
+    partial class AddDevelopersAndPublishers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -205,7 +208,7 @@ namespace MyGameList.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("varchar(255)")
-                        .HasColumnName("name");
+                        .HasColumnName("rating");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)")
@@ -221,47 +224,6 @@ namespace MyGameList.Migrations
                         .IsUnique();
 
                     b.ToTable("developers");
-                });
-
-            modelBuilder.Entity("MyGameList.Src.Features.GameMakers.Models.Person", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("id");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Bio")
-                        .HasColumnType("longtext")
-                        .HasColumnName("bio");
-
-                    b.Property<DateTime?>("Birthday")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("birthday");
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("created_at");
-
-                    b.Property<int?>("GenderId")
-                        .HasColumnType("int")
-                        .HasColumnName("gender_id");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext")
-                        .HasColumnName("name");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("updated_at");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GenderId");
-
-                    b.ToTable("people");
                 });
 
             modelBuilder.Entity("MyGameList.Src.Features.GameMakers.Models.Publisher", b =>
@@ -289,7 +251,7 @@ namespace MyGameList.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("varchar(255)")
-                        .HasColumnName("name");
+                        .HasColumnName("rating");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)")
@@ -336,20 +298,6 @@ namespace MyGameList.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("games");
-                });
-
-            modelBuilder.Entity("MyGameList.Src.Features.GameMakers.Models.Person", b =>
-                {
-                    b.HasOne("MyGameList.Src.Features.Categories.Models.Gender", "Gender")
-                        .WithMany("People")
-                        .HasForeignKey("GenderId");
-
-                    b.Navigation("Gender");
-                });
-
-            modelBuilder.Entity("MyGameList.Src.Features.Categories.Models.Gender", b =>
-                {
-                    b.Navigation("People");
                 });
 #pragma warning restore 612, 618
         }
