@@ -1,4 +1,5 @@
-﻿using MyGameList.Src.Features.GameMakers.Dtos;
+﻿using MyGameList.Src.Features.Categories.Models;
+using MyGameList.Src.Features.GameMakers.Dtos;
 using MyGameList.Src.Features.GameMakers.Models;
 using MyGameList.Src.Features.GameMakers.Repositories;
 using MyGameList.Src.Shared.Commons;
@@ -13,6 +14,7 @@ namespace MyGameList.Src.Features.GameMakers.Services
         Task<Response<DeveloperResponseDto>> GetDeveloperByIdAsync(int id);
         Task<Response> UpdateDeveloperAsync(int id, DeveloperDto developerDto);
         Task<Response> DeleteDeveloperAsync(int id);
+        Task<List<Developer>> GetDeveloperListByIds(List<int> ids);
     }
 
     public class DeveloperService(IDeveloperRepository developerRepo) : IDeveloperService
@@ -80,6 +82,13 @@ namespace MyGameList.Src.Features.GameMakers.Services
             await developerRepo.DeleteDeveloperAsync(existingDeveloper);
 
             return new Response(HttpStatusCode.OK, "Developer deleted successfully.");
+        }
+
+        public async Task<List<Developer>> GetDeveloperListByIds(List<int> ids)
+        {
+            List<Developer> developer = await developerRepo.GetDeveloperListByIdsAsync(ids);
+
+            return developer;
         }
     }
 }

@@ -11,6 +11,7 @@ namespace MyGameList.Src.Features.GameMakers.Repositories
         Task<Developer?> GetDeveloperByNameAsync(string name);
         Task UpdateDeveloperAsync(Developer developer);
         Task DeleteDeveloperAsync(Developer developer);
+        Task<List<Developer>> GetDeveloperListByIdsAsync(List<int> ids);
     }
 
     public class DeveloperRepository(MyGameListDbContext context) : IDeveloperRepository
@@ -50,6 +51,13 @@ namespace MyGameList.Src.Features.GameMakers.Repositories
             ArgumentNullException.ThrowIfNull(developer);
             context.Developer.Remove(developer);
             await context.SaveChangesAsync();
+        }
+
+        public async Task<List<Developer>> GetDeveloperListByIdsAsync(List<int> ids)
+        {
+            return await context.Developer
+                .Where(developer => ids.Contains(developer.Id))
+                .ToListAsync();
         }
     }
 }

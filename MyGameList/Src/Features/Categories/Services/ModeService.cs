@@ -1,6 +1,7 @@
 ﻿using MyGameList.Src.Features.Categories.Dtos;
 using MyGameList.Src.Features.Categories.Models;
 using MyGameList.Src.Features.Categories.Repositories;
+using MyGameList.Src.Features.GameMakers.Models;
 using MyGameList.Src.Shared.Commons;
 using System.Net;
 
@@ -13,6 +14,7 @@ namespace MyGameList.Src.Features.Categories.Services
         Task<Response<ModeResponseDto>> GetModeByIdAsync(int id);
         Task<Response> UpdateModeAsync(int id, ModeDto modeDto);
         Task<Response> DeleteModeAsync(int id);
+        Task<List<Mode>> GetModeListByIds(List<int> ids);
     }
 
     public class ModeService(IModeRepository modeRepo) : IModeService
@@ -80,6 +82,13 @@ namespace MyGameList.Src.Features.Categories.Services
             await modeRepo.DeleteModeAsync(existingMode);
 
             return new Response(HttpStatusCode.OK, "Mode deleted successfully.");
+        }
+
+        public async Task<List<Mode>> GetModeListByIds(List<int> ids)
+        {
+            List<Mode> mode = await modeRepo.GetModeListByIdsAsync(ids);
+
+            return mode;
         }
     }
 }

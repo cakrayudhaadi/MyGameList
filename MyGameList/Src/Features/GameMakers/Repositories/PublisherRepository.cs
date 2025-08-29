@@ -11,6 +11,7 @@ namespace MyGameList.Src.Features.GameMakers.Repositories
         Task<Publisher?> GetPublisherByNameAsync(string name);
         Task UpdatePublisherAsync(Publisher publisher);
         Task DeletePublisherAsync(Publisher publisher);
+        Task<List<Publisher>> GetPublisherListByIdsAsync(List<int> ids);
     }
 
     public class PublisherRepository(MyGameListDbContext context) : IPublisherRepository
@@ -50,6 +51,13 @@ namespace MyGameList.Src.Features.GameMakers.Repositories
             ArgumentNullException.ThrowIfNull(publisher);
             context.Publisher.Remove(publisher);
             await context.SaveChangesAsync();
+        }
+
+        public async Task<List<Publisher>> GetPublisherListByIdsAsync(List<int> ids)
+        {
+            return await context.Publisher
+                .Where(publisher => ids.Contains(publisher.Id))
+                .ToListAsync();
         }
     }
 }

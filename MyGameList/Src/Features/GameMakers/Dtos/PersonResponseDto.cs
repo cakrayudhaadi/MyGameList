@@ -46,5 +46,22 @@ namespace MyGameList.Src.Features.GameMakers.Dtos
                 Name = person.Name,
             };
         }
+
+        public static PersonResponseDto PersonModelToGameProperties(Person person)
+        {
+            return new()
+            {
+                Name = person.Name
+            };
+        }
+
+        public static PersonResponseDto PersonModelToEditGameProperties(Person person)
+        {
+            return new()
+            {
+                Id = person.Id,
+                Name = person.Name
+            };
+        }
     }
 }

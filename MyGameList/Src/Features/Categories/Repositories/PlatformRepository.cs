@@ -11,6 +11,7 @@ namespace MyGameList.Src.Features.Categories.Repositories
         Task<Platform?> GetPlatformByOptionAsync(string option);
         Task UpdatePlatformAsync(Platform platform);
         Task DeletePlatformAsync(Platform platform);
+        Task<List<Platform>> GetPlatformListByIdsAsync(List<int> ids);
     }
 
     public class PlatformRepository(MyGameListDbContext context) : IPlatformRepository
@@ -50,6 +51,13 @@ namespace MyGameList.Src.Features.Categories.Repositories
             ArgumentNullException.ThrowIfNull(platform);
             context.Platform.Remove(platform);
             await context.SaveChangesAsync();
+        }
+
+        public async Task<List<Platform>> GetPlatformListByIdsAsync(List<int> ids)
+        {
+            return await context.Platform
+                .Where(platform => ids.Contains(platform.Id))
+                .ToListAsync();
         }
     }
 }

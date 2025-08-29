@@ -1,6 +1,7 @@
 ﻿using MyGameList.Src.Features.Categories.Dtos;
 using MyGameList.Src.Features.Categories.Models;
 using MyGameList.Src.Features.Categories.Repositories;
+using MyGameList.Src.Features.GameMakers.Models;
 using MyGameList.Src.Shared.Commons;
 using System.Net;
 
@@ -13,6 +14,7 @@ namespace MyGameList.Src.Features.Categories.Services
         Task<Response<GenreResponseDto>> GetGenreByIdAsync(int id);
         Task<Response> UpdateGenreAsync(int id, GenreDto genreDto);
         Task<Response> DeleteGenreAsync(int id);
+        Task<List<Genre>> GetGenreListByIds(List<int> ids);
     }
 
     public class GenreService(IGenreRepository genreRepo) : IGenreService
@@ -80,6 +82,13 @@ namespace MyGameList.Src.Features.Categories.Services
             await genreRepo.DeleteGenreAsync(existingGenre);
 
             return new Response(HttpStatusCode.OK, "Genre deleted successfully.");
+        }
+
+        public async Task<List<Genre>> GetGenreListByIds(List<int> ids)
+        {
+            List<Genre> genre = await genreRepo.GetGenreListByIdsAsync(ids);
+
+            return genre;
         }
     }
 }

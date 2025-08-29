@@ -44,5 +44,24 @@ namespace MyGameList.Src.Features.GameMakers.Dtos
                 Name = publisher.Name,
             };
         }
+
+        public static PublisherResponseDto PublisherModelToGameProperties(Publisher publisher)
+        {
+            return new()
+            {
+                Name = publisher.Name,
+                Website = publisher.Website
+            };
+        }
+
+        public static PublisherResponseDto PublisherModelToEditGameProperties(Publisher publisher)
+        {
+            return new()
+            {
+                Id = publisher.Id,
+                Name = publisher.Name,
+                Website = publisher.Website
+            };
+        }
     }
 }

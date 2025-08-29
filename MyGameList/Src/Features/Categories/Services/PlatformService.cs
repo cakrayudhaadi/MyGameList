@@ -1,6 +1,7 @@
 ﻿using MyGameList.Src.Features.Categories.Dtos;
 using MyGameList.Src.Features.Categories.Models;
 using MyGameList.Src.Features.Categories.Repositories;
+using MyGameList.Src.Features.GameMakers.Models;
 using MyGameList.Src.Shared.Commons;
 using System.Net;
 
@@ -13,6 +14,7 @@ namespace MyGameList.Src.Features.Categories.Services
         Task<Response<PlatformResponseDto>> GetPlatformByIdAsync(int id);
         Task<Response> UpdatePlatformAsync(int id, PlatformDto platformDto);
         Task<Response> DeletePlatformAsync(int id);
+        Task<List<Platform>> GetPlatformListByIds(List<int> ids);
     }
 
     public class PlatformService(IPlatformRepository platformRepo) : IPlatformService
@@ -80,6 +82,13 @@ namespace MyGameList.Src.Features.Categories.Services
             await platformRepo.DeletePlatformAsync(existingPlatform);
 
             return new Response(HttpStatusCode.OK, "Platform deleted successfully.");
+        }
+
+        public async Task<List<Platform>> GetPlatformListByIds(List<int> ids)
+        {
+            List<Platform> platform = await platformRepo.GetPlatformListByIdsAsync(ids);
+
+            return platform;
         }
     }
 }

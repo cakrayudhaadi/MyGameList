@@ -1,6 +1,7 @@
 ﻿using MyGameList.Src.Features.Categories.Dtos;
 using MyGameList.Src.Features.Categories.Models;
 using MyGameList.Src.Features.Categories.Repositories;
+using MyGameList.Src.Features.GameMakers.Dtos;
 using MyGameList.Src.Shared.Commons;
 using System.Net;
 
@@ -13,6 +14,7 @@ namespace MyGameList.Src.Features.Categories.Services
         Task<Response<GenderResponseDto>> GetGenderByIdAsync(int id);
         Task<Response> UpdateGenderAsync(int id, GenderDto genderDto);
         Task<Response> DeleteGenderAsync(int id);
+        Task<Gender?> GetGenderById(int id);
     }
 
     public class GenderService(IGenderRepository genderRepo) : IGenderService
@@ -80,6 +82,13 @@ namespace MyGameList.Src.Features.Categories.Services
             await genderRepo.DeleteGenderAsync(existingGender);
 
             return new Response(HttpStatusCode.OK, "Gender deleted successfully.");
+        }
+
+        public async Task<Gender?> GetGenderById(int id)
+        {
+            Gender? gender = await genderRepo.GetGenderByIdAsync(id);
+            
+            return gender;
         }
     }
 }

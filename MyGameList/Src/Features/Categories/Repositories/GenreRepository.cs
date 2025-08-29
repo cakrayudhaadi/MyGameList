@@ -11,6 +11,7 @@ namespace MyGameList.Src.Features.Categories.Repositories
         Task<Genre?> GetGenreByOptionAsync(string option);
         Task UpdateGenreAsync(Genre genre);
         Task DeleteGenreAsync(Genre genre);
+        Task<List<Genre>> GetGenreListByIdsAsync(List<int> ids);
     }
 
     public class GenreRepository(MyGameListDbContext context) : IGenreRepository
@@ -50,6 +51,13 @@ namespace MyGameList.Src.Features.Categories.Repositories
             ArgumentNullException.ThrowIfNull(genre);
             context.Genre.Remove(genre);
             await context.SaveChangesAsync();
+        }
+
+        public async Task<List<Genre>> GetGenreListByIdsAsync(List<int> ids)
+        {
+            return await context.Genre
+                .Where(genre => ids.Contains(genre.Id))
+                .ToListAsync();
         }
     }
 }

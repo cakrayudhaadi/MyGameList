@@ -11,6 +11,7 @@ namespace MyGameList.Src.Features.Categories.Repositories
         Task<Mode?> GetModeByOptionAsync(string option);
         Task UpdateModeAsync(Mode mode);
         Task DeleteModeAsync(Mode mode);
+        Task<List<Mode>> GetModeListByIdsAsync(List<int> ids);
     }
 
     public class ModeRepository(MyGameListDbContext context) : IModeRepository
@@ -50,6 +51,13 @@ namespace MyGameList.Src.Features.Categories.Repositories
             ArgumentNullException.ThrowIfNull(mode);
             context.Mode.Remove(mode);
             await context.SaveChangesAsync();
+        }
+
+        public async Task<List<Mode>> GetModeListByIdsAsync(List<int> ids)
+        {
+            return await context.Mode
+                .Where(mode => ids.Contains(mode.Id))
+                .ToListAsync();
         }
     }
 }

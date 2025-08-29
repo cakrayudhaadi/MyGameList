@@ -13,6 +13,7 @@ namespace MyGameList.Src.Features.Categories.Services
         Task<Response<AgeRatingResponseDto>> GetAgeRatingByIdAsync(int id);
         Task<Response> UpdateAgeRatingAsync(int id, AgeRatingDto ageRatingDto);
         Task<Response> DeleteAgeRatingAsync(int id);
+        Task<AgeRating?> GetAgeRatingById(int id);
     }
 
     public class AgeRatingService(IAgeRatingRepository ageRatingRepo) : IAgeRatingService
@@ -80,6 +81,13 @@ namespace MyGameList.Src.Features.Categories.Services
             await ageRatingRepo.DeleteAgeRatingAsync(existingAgeRating);
 
             return new Response(HttpStatusCode.OK, "AgeRating deleted successfully.");
+        }
+
+        public async Task<AgeRating?> GetAgeRatingById(int id)
+        {
+            AgeRating? ageRating = await ageRatingRepo.GetAgeRatingByIdAsync(id);
+
+            return ageRating;
         }
     }
 }

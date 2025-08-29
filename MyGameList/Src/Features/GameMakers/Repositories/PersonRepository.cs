@@ -12,6 +12,7 @@ namespace MyGameList.Src.Features.GameMakers.Repositories
         Task<Person?> GetPersonByNameAsync(string name);
         Task UpdatePersonAsync(Person person);
         Task DeletePersonAsync(Person person);
+        Task<List<Person>> GetPersonListByIdsAsync(List<int> ids);
     }
 
     public class PersonRepository(MyGameListDbContext context) : IPersonRepository
@@ -51,6 +52,13 @@ namespace MyGameList.Src.Features.GameMakers.Repositories
             ArgumentNullException.ThrowIfNull(person);
             context.Person.Remove(person);
             await context.SaveChangesAsync();
+        }
+
+        public async Task<List<Person>> GetPersonListByIdsAsync(List<int> ids)
+        {
+            return await context.Person
+                .Where(person => ids.Contains(person.Id))
+                .ToListAsync();
         }
     }
 }
