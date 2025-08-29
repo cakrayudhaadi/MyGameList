@@ -27,12 +27,44 @@ namespace MyGameList.Src.Features
         // Games
         public DbSet<Game> Game => Set<Game>();
 
+        // Users
+
+        // Characters
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Person>()
-                .HasOne(p => p.Gender)
-                .WithMany(g => g.People)
-                .HasForeignKey(p => p.GenderId);
+                .HasOne(person => person.Gender)
+                .WithMany(gender => gender.Peoples)
+                .HasForeignKey(person => person.GenderId);
+            modelBuilder.Entity<Game>()
+                .HasMany(game => game.AgeRatings)
+                .WithMany(ageRating => ageRating.Games)
+                .UsingEntity(join => join.ToTable("game_age_ratings"));
+            modelBuilder.Entity<Game>()
+                .HasMany(game => game.Developers)
+                .WithMany(developer => developer.Games)
+                .UsingEntity(join => join.ToTable("game_developers"));
+            modelBuilder.Entity<Game>()
+                .HasMany(game => game.Publishers)
+                .WithMany(publisher => publisher.Games)
+                .UsingEntity(join => join.ToTable("game_publishers"));
+            modelBuilder.Entity<Game>()
+                .HasMany(game => game.Producers)
+                .WithMany(producer => producer.Games)
+                .UsingEntity(join => join.ToTable("game_producers"));
+            modelBuilder.Entity<Game>()
+                .HasMany(game => game.Genres)
+                .WithMany(genre => genre.Games)
+                .UsingEntity(join => join.ToTable("game_genres"));
+            modelBuilder.Entity<Game>()
+                .HasMany(game => game.Modes)
+                .WithMany(mode => mode.Games)
+                .UsingEntity(join => join.ToTable("game_modes"));
+            modelBuilder.Entity<Game>()
+                .HasMany(game => game.Platforms)
+                .WithMany(platform => platform.Games)
+                .UsingEntity(join => join.ToTable("game_platforms"));
 
             base.OnModelCreating(modelBuilder);
         }

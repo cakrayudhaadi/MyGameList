@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyGameList.Src.Features;
 
@@ -11,9 +12,11 @@ using MyGameList.Src.Features;
 namespace MyGameList.Migrations
 {
     [DbContext(typeof(MyGameListDbContext))]
-    partial class MyGameListDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250829133001_UpdateGameAndAddRelations")]
+    partial class UpdateGameAndAddRelations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,21 +24,6 @@ namespace MyGameList.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
-
-            modelBuilder.Entity("AgeRatingGame", b =>
-                {
-                    b.Property<int>("AgeRatingsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GamesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("AgeRatingsId", "GamesId");
-
-                    b.HasIndex("GamesId");
-
-                    b.ToTable("game_age_ratings", (string)null);
-                });
 
             modelBuilder.Entity("DeveloperGame", b =>
                 {
@@ -421,6 +409,10 @@ namespace MyGameList.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("AgeRatingId")
+                        .HasColumnType("int")
+                        .HasColumnName("age_rating_id");
+
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("created_at");
@@ -448,22 +440,9 @@ namespace MyGameList.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AgeRatingId");
+
                     b.ToTable("games");
-                });
-
-            modelBuilder.Entity("AgeRatingGame", b =>
-                {
-                    b.HasOne("MyGameList.Src.Features.Categories.Models.AgeRating", null)
-                        .WithMany()
-                        .HasForeignKey("AgeRatingsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MyGameList.Src.Features.Games.Models.Game", null)
-                        .WithMany()
-                        .HasForeignKey("GamesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("DeveloperGame", b =>
@@ -563,6 +542,20 @@ namespace MyGameList.Migrations
                         .HasForeignKey("GenderId");
 
                     b.Navigation("Gender");
+                });
+
+            modelBuilder.Entity("MyGameList.Src.Features.Games.Models.Game", b =>
+                {
+                    b.HasOne("MyGameList.Src.Features.Categories.Models.AgeRating", "AgeRating")
+                        .WithMany("Games")
+                        .HasForeignKey("AgeRatingId");
+
+                    b.Navigation("AgeRating");
+                });
+
+            modelBuilder.Entity("MyGameList.Src.Features.Categories.Models.AgeRating", b =>
+                {
+                    b.Navigation("Games");
                 });
 
             modelBuilder.Entity("MyGameList.Src.Features.Categories.Models.Gender", b =>

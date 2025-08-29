@@ -13,6 +13,7 @@ namespace MyGameList.Src.Features.Categories.Services
         Task<Response<GenreResponseDto>> GetGenreByIdAsync(int id);
         Task<Response> UpdateGenreAsync(int id, GenreDto genreDto);
         Task<Response> DeleteGenreAsync(int id);
+        Task<List<Genre>> GetGenreListByIds(List<int> ids);
     }
 
     public class GenreService(IGenreRepository genreRepo) : IGenreService
@@ -25,7 +26,7 @@ namespace MyGameList.Src.Features.Categories.Services
             if (errValidation is not null)
                 return new Response<GenreResponseDto>(HttpStatusCode.BadRequest, errValidation, null);
 
-            Genre? duplicate = await genreRepo.GetGenreByOptionAsync(genreDto.Genre);
+            Genre? duplicate = await genreRepo.GetGenreByOptionAsync(null, genreDto.Genre);
             if (duplicate is not null)
                 return new Response<GenreResponseDto>(HttpStatusCode.BadRequest, "Genre must be unique.", null);
 
@@ -61,7 +62,7 @@ namespace MyGameList.Src.Features.Categories.Services
             if (existingGenre is null)
                 return new Response(HttpStatusCode.NotFound, "Genre not found.");
 
-            Genre? duplicate = await genreRepo.GetGenreByOptionAsync(genreDto.Genre);
+            Genre? duplicate = await genreRepo.GetGenreByOptionAsync(id, genreDto.Genre);
             if (duplicate is not null)
                 return new Response(HttpStatusCode.BadRequest, "Genre must be unique.");
 
@@ -80,6 +81,13 @@ namespace MyGameList.Src.Features.Categories.Services
             await genreRepo.DeleteGenreAsync(existingGenre);
 
             return new Response(HttpStatusCode.OK, "Genre deleted successfully.");
+        }
+
+        public async Task<List<Genre>> GetGenreListByIds(List<int> ids)
+        {
+            List<Genre> genres = await genreRepo.GetGenreListByIdsAsync(ids);
+
+            return genres;
         }
     }
 }

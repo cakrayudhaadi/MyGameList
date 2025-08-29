@@ -44,5 +44,24 @@ namespace MyGameList.Src.Features.GameMakers.Dtos
                 Name = developer.Name,
             };
         }
+
+        public static DeveloperResponseDto DeveloperModelToGameProperties(Developer developer)
+        {
+            return new()
+            {
+                Name = developer.Name,
+                Website = developer.Website
+            };
+        }
+
+        public static DeveloperResponseDto DeveloperModelToEditGameProperties(Developer developer)
+        {
+            return new()
+            {
+                Id = developer.Id,
+                Name = developer.Name,
+                Website = developer.Website
+            };
+        }
     }
 }

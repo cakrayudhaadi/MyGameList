@@ -35,6 +35,6 @@ namespace MyGameList.Src.Features.Categories.Models
         public DateTime? UpdatedAt { get; set; }
         
         [JsonIgnore]
-        public ICollection<Person> People { get; set; }
+        public ICollection<Person>? Peoples { get; set; }
     }
 }

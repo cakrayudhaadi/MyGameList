@@ -1,5 +1,5 @@
-﻿using MyGameList.Src.Features.GameMakers.Models;
-using MyGameList.Src.Shared.Commons;
+﻿using MyGameList.Src.Shared.Commons;
+using MyGameList.Src.Features.GameMakers.Models;
 using System.Text.Json.Serialization;
 
 namespace MyGameList.Src.Features.GameMakers.Dtos
@@ -44,6 +44,23 @@ namespace MyGameList.Src.Features.GameMakers.Dtos
             {
                 Id = person.Id,
                 Name = person.Name,
+            };
+        }
+
+        public static PersonResponseDto PersonModelToGameProperties(Person person)
+        {
+            return new()
+            {
+                Name = person.Name
+            };
+        }
+
+        public static PersonResponseDto PersonModelToEditGameProperties(Person person)
+        {
+            return new()
+            {
+                Id = person.Id,
+                Name = person.Name
             };
         }
     }

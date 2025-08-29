@@ -13,6 +13,7 @@ namespace MyGameList.Src.Features.Categories.Services
         Task<Response<PlatformResponseDto>> GetPlatformByIdAsync(int id);
         Task<Response> UpdatePlatformAsync(int id, PlatformDto platformDto);
         Task<Response> DeletePlatformAsync(int id);
+        Task<List<Platform>> GetPlatformListByIds(List<int> ids);
     }
 
     public class PlatformService(IPlatformRepository platformRepo) : IPlatformService
@@ -25,7 +26,7 @@ namespace MyGameList.Src.Features.Categories.Services
             if (errValidation is not null)
                 return new Response<PlatformResponseDto>(HttpStatusCode.BadRequest, errValidation, null);
 
-            Platform? duplicate = await platformRepo.GetPlatformByOptionAsync(platformDto.Platform);
+            Platform? duplicate = await platformRepo.GetPlatformByOptionAsync(null, platformDto.Platform);
             if (duplicate is not null)
                 return new Response<PlatformResponseDto>(HttpStatusCode.BadRequest, "Platform must be unique.", null);
 
@@ -61,7 +62,7 @@ namespace MyGameList.Src.Features.Categories.Services
             if (existingPlatform is null)
                 return new Response(HttpStatusCode.NotFound, "Platform not found.");
 
-            Platform? duplicate = await platformRepo.GetPlatformByOptionAsync(platformDto.Platform);
+            Platform? duplicate = await platformRepo.GetPlatformByOptionAsync(id, platformDto.Platform);
             if (duplicate is not null)
                 return new Response(HttpStatusCode.BadRequest, "Platform must be unique.");
 
@@ -80,6 +81,13 @@ namespace MyGameList.Src.Features.Categories.Services
             await platformRepo.DeletePlatformAsync(existingPlatform);
 
             return new Response(HttpStatusCode.OK, "Platform deleted successfully.");
+        }
+
+        public async Task<List<Platform>> GetPlatformListByIds(List<int> ids)
+        {
+            List<Platform> platforms = await platformRepo.GetPlatformListByIdsAsync(ids);
+
+            return platforms;
         }
     }
 }

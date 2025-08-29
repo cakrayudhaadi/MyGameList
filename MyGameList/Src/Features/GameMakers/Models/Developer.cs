@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MyGameList.Src.Features.Games.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -42,5 +43,7 @@ namespace MyGameList.Src.Features.GameMakers.Models
         public DateTime? CreatedAt { get; set; }
         [Column("updated_at")]
         public DateTime? UpdatedAt { get; set; }
+
+        public ICollection<Game> Games { get; set; } = [];
     }
 }

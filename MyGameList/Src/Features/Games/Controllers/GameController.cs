@@ -1,70 +1,80 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using MyGameList.Src.Features.Games.Dtos;
-using MyGameList.Src.Features.Games.Models;
+using MyGameList.Src.Features.Games.Services;
+using MyGameList.Src.Shared.Commons;
+using System.Net;
 
 namespace MyGameList.Src.Features.Games.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GameController(MyGameListDbContext context) : ControllerBase
+    public class GameController(IGameService gameService) : ControllerBase
     {
-        private readonly MyGameListDbContext _context = context;
+        private readonly ResponseHandler res = new();
+
+        [HttpPost]
+        public async Task<ActionResult<ApiResponse>> AddGame(GameDto gameDto)
+        {
+            try
+            {
+                return res.Result(await gameService.AddGameAsync(gameDto));
+            }
+            catch (ArgumentException ex)
+            {
+                return res.Result(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
 
         [HttpGet]
-        public async Task<ActionResult<List<Game>>> GetGames()
+        public async Task<ActionResult<ApiResponse<List<GameCoverResponseDto>>>> GetAllGames()
         {
-            return Ok(await _context.Game.ToListAsync());
+            try
+            {
+                return res.Result<List<GameCoverResponseDto>>(await gameService.GetAllGamesAsync());
+            }
+            catch (ArgumentException ex)
+            {
+                return res.Result<List<GameCoverResponseDto>>(HttpStatusCode.InternalServerError, ex.Message, null);
+            }
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Game>> GetVideoGameById(int id)
+        public async Task<ActionResult<ApiResponse<GameResponseDto>>> GetGameById(int id)
         {
-            var game = await _context.Game.FindAsync(id);
-            if (game is null)
-                return NotFound();
-
-            return Ok(game);
-        }
-
-        [HttpPost]
-        public async Task<ActionResult<Game>> AddGame(GameDto gameDto)
-        {
-            if (gameDto is null)
-                return BadRequest();
-
-            Game newGame = gameDto.GamesDtoToModel(null, null);
-            _context.Game.Add(newGame);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetVideoGameById), new { id = newGame.Id }, newGame);
+            try
+            {
+                return res.Result<GameResponseDto>(await gameService.GetGameByIdAsync(id));
+            }
+            catch (ArgumentException ex)
+            {
+                return res.Result<GameResponseDto>(HttpStatusCode.InternalServerError, ex.Message, null);
+            }
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateVideoGame(int id, GameDto gameDto)
+        public async Task<ActionResult<ApiResponse>> UpdateGame(int id, GameDto gameDto)
         {
-            var game = await _context.Game.FindAsync(id);
-            if (game is null)
-                return NotFound();
-
-            game = gameDto.GamesDtoToModel(game, id);
-
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            try
+            {
+                return res.Result(await gameService.UpdateGameAsync(id, gameDto));
+            }
+            catch (ArgumentException ex)
+            {
+                return res.Result(HttpStatusCode.InternalServerError, ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteVideoGame(int id)
+        public async Task<ActionResult<ApiResponse>> DeleteGame(int id)
         {
-            var game = await _context.Game.FindAsync(id);
-            if (game is null)
-                return NotFound();
-
-            _context.Game.Remove(game);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            try
+            {
+                return res.Result(await gameService.DeleteGameAsync(id));
+            }
+            catch (ArgumentException ex)
+            {
+                return res.Result(HttpStatusCode.InternalServerError, ex.Message);
+            }
         }
     }
 }

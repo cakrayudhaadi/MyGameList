@@ -1,7 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using MyGameList.Src.Features;
 using MyGameList.Src.Features.Categories;
+using MyGameList.Src.Features.Characters;
 using MyGameList.Src.Features.GameMakers;
+using MyGameList.Src.Features.Games;
+using MyGameList.Src.Features.Users;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +27,9 @@ builder.Services.AddDbContext<MyGameListDbContext>(options =>
 // Add application services
 builder.Services.AddCategoryServices();
 builder.Services.AddGameMakerServices();
+builder.Services.AddGameServices();
+builder.Services.AddUserServices();
+builder.Services.AddCharacterServices();
 
 var app = builder.Build();
 

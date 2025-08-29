@@ -13,6 +13,7 @@ namespace MyGameList.Src.Features.GameMakers.Services
         Task<Response<DeveloperResponseDto>> GetDeveloperByIdAsync(int id);
         Task<Response> UpdateDeveloperAsync(int id, DeveloperDto developerDto);
         Task<Response> DeleteDeveloperAsync(int id);
+        Task<List<Developer>> GetDeveloperListByIds(List<int> ids);
     }
 
     public class DeveloperService(IDeveloperRepository developerRepo) : IDeveloperService
@@ -25,7 +26,7 @@ namespace MyGameList.Src.Features.GameMakers.Services
             if (errValidation is not null)
                 return new Response<DeveloperResponseDto>(HttpStatusCode.BadRequest, errValidation, null);
 
-            Developer? duplicate = await developerRepo.GetDeveloperByNameAsync(developerDto.Name);
+            Developer? duplicate = await developerRepo.GetDeveloperByNameAsync(null, developerDto.Name);
             if (duplicate is not null)
                 return new Response<DeveloperResponseDto>(HttpStatusCode.BadRequest, "Developer Name must be unique.", null);
 
@@ -61,7 +62,7 @@ namespace MyGameList.Src.Features.GameMakers.Services
             if (existingDeveloper is null)
                 return new Response(HttpStatusCode.NotFound, "Developer not found.");
 
-            Developer? duplicate = await developerRepo.GetDeveloperByNameAsync(developerDto.Name);
+            Developer? duplicate = await developerRepo.GetDeveloperByNameAsync(id, developerDto.Name);
             if (duplicate is not null)
                 return new Response(HttpStatusCode.BadRequest, "Developer Name must be unique.");
 
@@ -80,6 +81,13 @@ namespace MyGameList.Src.Features.GameMakers.Services
             await developerRepo.DeleteDeveloperAsync(existingDeveloper);
 
             return new Response(HttpStatusCode.OK, "Developer deleted successfully.");
+        }
+
+        public async Task<List<Developer>> GetDeveloperListByIds(List<int> ids)
+        {
+            List<Developer> developers = await developerRepo.GetDeveloperListByIdsAsync(ids);
+
+            return developers;
         }
     }
 }

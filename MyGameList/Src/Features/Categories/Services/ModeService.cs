@@ -13,6 +13,7 @@ namespace MyGameList.Src.Features.Categories.Services
         Task<Response<ModeResponseDto>> GetModeByIdAsync(int id);
         Task<Response> UpdateModeAsync(int id, ModeDto modeDto);
         Task<Response> DeleteModeAsync(int id);
+        Task<List<Mode>> GetModeListByIds(List<int> ids);
     }
 
     public class ModeService(IModeRepository modeRepo) : IModeService
@@ -25,7 +26,7 @@ namespace MyGameList.Src.Features.Categories.Services
             if (errValidation is not null)
                 return new Response<ModeResponseDto>(HttpStatusCode.BadRequest, errValidation, null);
 
-            Mode? duplicate = await modeRepo.GetModeByOptionAsync(modeDto.Mode);
+            Mode? duplicate = await modeRepo.GetModeByOptionAsync(null, modeDto.Mode);
             if (duplicate is not null)
                 return new Response<ModeResponseDto>(HttpStatusCode.BadRequest, "Mode must be unique.", null);
 
@@ -61,7 +62,7 @@ namespace MyGameList.Src.Features.Categories.Services
             if (existingMode is null)
                 return new Response(HttpStatusCode.NotFound, "Mode not found.");
 
-            Mode? duplicate = await modeRepo.GetModeByOptionAsync(modeDto.Mode);
+            Mode? duplicate = await modeRepo.GetModeByOptionAsync(id, modeDto.Mode);
             if (duplicate is not null)
                 return new Response(HttpStatusCode.BadRequest, "Mode must be unique.");
 
@@ -80,6 +81,13 @@ namespace MyGameList.Src.Features.Categories.Services
             await modeRepo.DeleteModeAsync(existingMode);
 
             return new Response(HttpStatusCode.OK, "Mode deleted successfully.");
+        }
+
+        public async Task<List<Mode>> GetModeListByIds(List<int> ids)
+        {
+            List<Mode> modes = await modeRepo.GetModeListByIdsAsync(ids);
+
+            return modes;
         }
     }
 }
