@@ -1,5 +1,5 @@
 ﻿using MyGameList.Src.Features.Categories.Models;
-using MyGameList.Src.Features.Categories.Repositories;
+using MyGameList.Src.Features.Categories.Services;
 using MyGameList.Src.Features.GameMakers.Dtos;
 using MyGameList.Src.Features.GameMakers.Models;
 using MyGameList.Src.Features.GameMakers.Repositories;
@@ -15,9 +15,10 @@ namespace MyGameList.Src.Features.GameMakers.Services
         Task<Response<PersonResponseDto>> GetPersonByIdAsync(int id);
         Task<Response> UpdatePersonAsync(int id, PersonDto personDto);
         Task<Response> DeletePersonAsync(int id);
+        Task<List<Person>> GetPersonListByIds(List<int> ids);
     }
 
-    public class PersonService(IPersonRepository personRepo, IGenderRepository genderRepo) : IPersonService
+    public class PersonService(IPersonRepository personRepo, IGenderService genderService) : IPersonService
     {
         public async Task<Response<PersonResponseDto>> AddPersonAsync(PersonDto personDto)
         {
@@ -27,22 +28,23 @@ namespace MyGameList.Src.Features.GameMakers.Services
             if (errValidation is not null)
                 return new Response<PersonResponseDto>(HttpStatusCode.BadRequest, errValidation, null);
 
-            Gender? gender = await genderRepo.GetGenderByIdAsync(personDto.GenderId.Value);
+            Gender? gender = await genderService.GetGenderById(personDto.GenderId.Value);
             if (gender is null)
                 return new Response<PersonResponseDto>(HttpStatusCode.BadRequest, "Gender not found.", null);
 
             Person person = personDto.PersonDtoToModel(null, null);
+            person.Gender = gender;
+
             Person newPerson = await personRepo.AddAsync(person);
             PersonResponseDto personResponseDto = PersonResponseDto.PersonModelToResponseDto(newPerson);
-            personResponseDto.Gender = gender.Option;
 
             return new Response<PersonResponseDto>(HttpStatusCode.OK, "Person created successfully.", personResponseDto);
         }
 
         public async Task<Response<List<PersonResponseDto>>> GetAllPersonsAsync()
         {
-            List<Person> persons = await personRepo.GetAllPersonsAsync();
-            List<PersonResponseDto> personResponseDtos = [.. persons.Select(person => PersonResponseDto.PersonModelToResponseDto(person))];
+            List<Person> people = await personRepo.GetAllPersonsAsync();
+            List<PersonResponseDto> personResponseDtos = [.. people.Select(person => PersonResponseDto.PersonModelToResponseDto(person))];
 
             return new Response<List<PersonResponseDto>>(HttpStatusCode.OK, HttpStatusCode.OK.ToString(), personResponseDtos);
         }
@@ -64,6 +66,13 @@ namespace MyGameList.Src.Features.GameMakers.Services
             if (existingPerson is null)
                 return new Response(HttpStatusCode.NotFound, "Person not found.");
 
+            if (personDto.GenderId.HasValue)
+            {
+                Gender? gender = await genderService.GetGenderById(personDto.GenderId.Value);
+                if (gender is null)
+                    return new Response(HttpStatusCode.BadRequest, "Gender not found.");
+            }
+
             Person updatedPerson = personDto.PersonDtoToModel(existingPerson, id);
             await personRepo.UpdatePersonAsync(updatedPerson);
 
@@ -79,6 +88,13 @@ namespace MyGameList.Src.Features.GameMakers.Services
             await personRepo.DeletePersonAsync(existingPerson);
 
             return new Response(HttpStatusCode.OK, "Person deleted successfully.");
+        }
+
+        public async Task<List<Person>> GetPersonListByIds(List<int> ids)
+        {
+            List<Person> people = await personRepo.GetPersonListByIdsAsync(ids);
+
+            return people;
         }
     }
 }

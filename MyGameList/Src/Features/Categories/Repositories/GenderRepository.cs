@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyGameList.Src.Features.Categories.Models;
+using System.Reflection;
 
 namespace MyGameList.Src.Features.Categories.Repositories
 {
@@ -8,7 +9,7 @@ namespace MyGameList.Src.Features.Categories.Repositories
         Task<Gender> AddAsync(Gender gender);
         Task<List<Gender>> GetAllGendersAsync();
         Task<Gender?> GetGenderByIdAsync(int id);
-        Task<Gender?> GetGenderByOptionAsync(string option);
+        Task<Gender?> GetGenderByOptionAsync(int? id, string option);
         Task UpdateGenderAsync(Gender gender);
         Task DeleteGenderAsync(Gender gender);
     }
@@ -33,9 +34,12 @@ namespace MyGameList.Src.Features.Categories.Repositories
             return await context.Gender.FindAsync(id);
         }
 
-        public async Task<Gender?> GetGenderByOptionAsync(string option)
+        public async Task<Gender?> GetGenderByOptionAsync(int? id, string option)
         {
-            return await context.Gender.FirstOrDefaultAsync(gender => gender.Option == option);
+            if (id.HasValue)
+                return await context.Gender.FirstOrDefaultAsync(gender => gender.Id != id && gender.Option == option);
+            else
+                return await context.Gender.FirstOrDefaultAsync(gender => gender.Option == option);
         }
 
         public async Task UpdateGenderAsync(Gender gender)

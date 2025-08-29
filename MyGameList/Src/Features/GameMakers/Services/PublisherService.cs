@@ -13,6 +13,7 @@ namespace MyGameList.Src.Features.GameMakers.Services
         Task<Response<PublisherResponseDto>> GetPublisherByIdAsync(int id);
         Task<Response> UpdatePublisherAsync(int id, PublisherDto publisherDto);
         Task<Response> DeletePublisherAsync(int id);
+        Task<List<Publisher>> GetPublisherListByIds(List<int> ids);
     }
 
     public class PublisherService(IPublisherRepository publisherRepo) : IPublisherService
@@ -25,7 +26,7 @@ namespace MyGameList.Src.Features.GameMakers.Services
             if (errValidation is not null)
                 return new Response<PublisherResponseDto>(HttpStatusCode.BadRequest, errValidation, null);
 
-            Publisher? duplicate = await publisherRepo.GetPublisherByNameAsync(publisherDto.Name);
+            Publisher? duplicate = await publisherRepo.GetPublisherByNameAsync(null, publisherDto.Name);
             if (duplicate is not null)
                 return new Response<PublisherResponseDto>(HttpStatusCode.BadRequest, "Publisher Name must be unique.", null);
 
@@ -61,7 +62,7 @@ namespace MyGameList.Src.Features.GameMakers.Services
             if (existingPublisher is null)
                 return new Response(HttpStatusCode.NotFound, "Publisher not found.");
 
-            Publisher? duplicate = await publisherRepo.GetPublisherByNameAsync(publisherDto.Name);
+            Publisher? duplicate = await publisherRepo.GetPublisherByNameAsync(id, publisherDto.Name);
             if (duplicate is not null)
                 return new Response(HttpStatusCode.BadRequest, "Publisher Name must be unique.");
 
@@ -80,6 +81,13 @@ namespace MyGameList.Src.Features.GameMakers.Services
             await publisherRepo.DeletePublisherAsync(existingPublisher);
 
             return new Response(HttpStatusCode.OK, "Publisher deleted successfully.");
+        }
+
+        public async Task<List<Publisher>> GetPublisherListByIds(List<int> ids)
+        {
+            List<Publisher> publishers = await publisherRepo.GetPublisherListByIdsAsync(ids);
+
+            return publishers;
         }
     }
 }

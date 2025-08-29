@@ -26,5 +26,22 @@ namespace MyGameList.Src.Features.Categories.Dtos
                 Mode = mode.Option
             };
         }
+
+        public static ModeResponseDto ModeModelToGameProperties(Mode mode)
+        {
+            return new()
+            {
+                Mode = mode.Option
+            };
+        }
+
+        public static ModeResponseDto ModeModelToEditGameProperties(Mode mode)
+        {
+            return new()
+            {
+                Id = mode.Id,
+                Mode = mode.Option
+            };
+        }
     }
 }

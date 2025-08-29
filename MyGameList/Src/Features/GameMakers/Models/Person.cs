@@ -1,4 +1,5 @@
 ﻿using MyGameList.Src.Features.Categories.Models;
+using MyGameList.Src.Features.Games.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -42,5 +43,7 @@ namespace MyGameList.Src.Features.GameMakers.Models
         public DateTime? UpdatedAt { get; set; }
 
         public Gender? Gender { get; set; }
+
+        public ICollection<Game> Games { get; set; } = [];
     }
 }

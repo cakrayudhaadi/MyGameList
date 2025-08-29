@@ -26,5 +26,22 @@ namespace MyGameList.Src.Features.Categories.Dtos
                 Genre = genre.Option
             };
         }
+
+        public static GenreResponseDto GenreModelToGameProperties(Genre genre)
+        {
+            return new()
+            {
+                Genre = genre.Option
+            };
+        }
+
+        public static GenreResponseDto GenreModelToEditGameProperties(Genre genre)
+        {
+            return new()
+            {
+                Id = genre.Id,
+                Genre = genre.Option
+            };
+        }
     }
 }

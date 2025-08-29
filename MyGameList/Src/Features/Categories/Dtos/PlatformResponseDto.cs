@@ -26,5 +26,22 @@ namespace MyGameList.Src.Features.Categories.Dtos
                 Platform = platform.Option
             }; ;
         }
+
+        public static PlatformResponseDto PlatformModelToGameProperties(Platform platform)
+        {
+            return new()
+            {
+                Platform = platform.Option
+            };
+        }
+
+        public static PlatformResponseDto PlatformModelToEditGameProperties(Platform platform)
+        {
+            return new()
+            {
+                Id = platform.Id,
+                Platform = platform.Option
+            };
+        }
     }
 }
