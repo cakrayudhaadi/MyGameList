@@ -8,7 +8,7 @@ namespace MyGameList.Src.Features.Categories.Repositories
         Task<Genre> AddAsync(Genre genre);
         Task<List<Genre>> GetAllGenresAsync();
         Task<Genre?> GetGenreByIdAsync(int id);
-        Task<Genre?> GetGenreByOptionAsync(string option);
+        Task<Genre?> GetGenreByOptionAsync(int? id, string option);
         Task UpdateGenreAsync(Genre genre);
         Task DeleteGenreAsync(Genre genre);
         Task<List<Genre>> GetGenreListByIdsAsync(List<int> ids);
@@ -34,9 +34,12 @@ namespace MyGameList.Src.Features.Categories.Repositories
             return await context.Genre.FindAsync(id);
         }
 
-        public async Task<Genre?> GetGenreByOptionAsync(string option)
+        public async Task<Genre?> GetGenreByOptionAsync(int? id, string option)
         {
-            return await context.Genre.FirstOrDefaultAsync(genre => genre.Option == option);
+            if (id.HasValue)
+                return await context.Genre.FirstOrDefaultAsync(genre => genre.Id != id && genre.Option == option);
+            else
+                return await context.Genre.FirstOrDefaultAsync(genre => genre.Option == option);
         }
 
         public async Task UpdateGenreAsync(Genre genre)

@@ -27,7 +27,7 @@ namespace MyGameList.Src.Features.Categories.Services
             if (errValidation is not null)
                 return new Response<GenderResponseDto>(HttpStatusCode.BadRequest, errValidation, null);
 
-            Gender? duplicate = await genderRepo.GetGenderByOptionAsync(genderDto.Gender);
+            Gender? duplicate = await genderRepo.GetGenderByOptionAsync(null, genderDto.Gender);
             if (duplicate is not null)
                 return new Response<GenderResponseDto>(HttpStatusCode.BadRequest, "Gender must be unique.", null);
 
@@ -63,7 +63,7 @@ namespace MyGameList.Src.Features.Categories.Services
             if (existingGender is null)
                 return new Response(HttpStatusCode.NotFound, "Gender not found.");
 
-            Gender? duplicate = await genderRepo.GetGenderByOptionAsync(genderDto.Gender);
+            Gender? duplicate = await genderRepo.GetGenderByOptionAsync(id, genderDto.Gender);
             if (duplicate is not null)
                 return new Response(HttpStatusCode.BadRequest, "Gender must be unique.");
 

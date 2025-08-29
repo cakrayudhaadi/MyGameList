@@ -8,7 +8,7 @@ namespace MyGameList.Src.Features.GameMakers.Repositories
         Task<Publisher> AddAsync(Publisher publisher);
         Task<List<Publisher>> GetAllPublishersAsync();
         Task<Publisher?> GetPublisherByIdAsync(int id);
-        Task<Publisher?> GetPublisherByNameAsync(string name);
+        Task<Publisher?> GetPublisherByNameAsync(int? id, string name);
         Task UpdatePublisherAsync(Publisher publisher);
         Task DeletePublisherAsync(Publisher publisher);
         Task<List<Publisher>> GetPublisherListByIdsAsync(List<int> ids);
@@ -34,9 +34,12 @@ namespace MyGameList.Src.Features.GameMakers.Repositories
             return await context.Publisher.FindAsync(id);
         }
 
-        public async Task<Publisher?> GetPublisherByNameAsync(string name)
+        public async Task<Publisher?> GetPublisherByNameAsync(int? id, string name)
         {
-            return await context.Publisher.FirstOrDefaultAsync(publisher => publisher.Name == name);
+            if (id.HasValue)
+                return await context.Publisher.FirstOrDefaultAsync(publisher => publisher.Id != id && publisher.Name == name);
+            else
+                return await context.Publisher.FirstOrDefaultAsync(publisher => publisher.Name == name);
         }
 
         public async Task UpdatePublisherAsync(Publisher publisher)

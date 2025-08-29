@@ -8,7 +8,7 @@ namespace MyGameList.Src.Features.Categories.Repositories
         Task<AgeRating> AddAsync(AgeRating ageRating);
         Task<List<AgeRating>> GetAllAgeRatingsAsync();
         Task<AgeRating?> GetAgeRatingByIdAsync(int id);
-        Task<AgeRating?> GetAgeRatingByRatingAsync(string rating);
+        Task<AgeRating?> GetAgeRatingByRatingAsync(int? id, string rating);
         Task UpdateAgeRatingAsync(AgeRating ageRating);
         Task DeleteAgeRatingAsync(AgeRating ageRating);
     }
@@ -33,9 +33,12 @@ namespace MyGameList.Src.Features.Categories.Repositories
             return await context.AgeRating.FindAsync(id);
         }
 
-        public async Task<AgeRating?> GetAgeRatingByRatingAsync(string rating)
+        public async Task<AgeRating?> GetAgeRatingByRatingAsync(int? id, string rating)
         {
-            return await context.AgeRating.FirstOrDefaultAsync(ageRating => ageRating.Rating == rating);
+            if (id.HasValue)
+                return await context.AgeRating.FirstOrDefaultAsync(ageRating => ageRating.Id != id && ageRating.Rating == rating);
+            else
+                return await context.AgeRating.FirstOrDefaultAsync(ageRating => ageRating.Rating == rating);
         }
 
         public async Task UpdateAgeRatingAsync(AgeRating ageRating)

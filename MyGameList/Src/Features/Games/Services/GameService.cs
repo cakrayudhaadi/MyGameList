@@ -79,7 +79,7 @@ namespace MyGameList.Src.Features.Games.Services
             if (errValidation is not null)
                 return new Response(HttpStatusCode.BadRequest, errValidation);
 
-            Game? duplicate = await gameRepo.GetGameByTitleAsync(gameDto.Title);
+            Game? duplicate = await gameRepo.GetGameByTitleAsync(null, gameDto.Title);
             if (duplicate is not null)
                 return new Response(HttpStatusCode.BadRequest, "Game Title must be unique.");
 
@@ -120,7 +120,7 @@ namespace MyGameList.Src.Features.Games.Services
             if (existingGame is null)
                 return new Response(HttpStatusCode.NotFound, "Game not found.");
 
-            Game? duplicate = await gameRepo.GetGameByTitleAsync(gameDto.Title);
+            Game? duplicate = await gameRepo.GetGameByTitleAsync(id, gameDto.Title);
             if (duplicate is not null)
                 return new Response(HttpStatusCode.BadRequest, "Game Title must be unique.");
 

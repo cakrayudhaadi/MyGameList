@@ -8,7 +8,7 @@ namespace MyGameList.Src.Features.Games.Repositories
         Task<Game> AddAsync(Game game);
         Task<List<Game>> GetAllGamesAsync();
         Task<Game?> GetGameByIdAsync(int id);
-        Task<Game?> GetGameByTitleAsync(string title);
+        Task<Game?> GetGameByTitleAsync(int? id, string title);
         Task UpdateGameAsync(Game game);
         Task DeleteGameAsync(Game game);
     }
@@ -47,9 +47,12 @@ namespace MyGameList.Src.Features.Games.Repositories
                 .FirstOrDefaultAsync(game => game.Id == id);
         }
 
-        public async Task<Game?> GetGameByTitleAsync(string title)
+        public async Task<Game?> GetGameByTitleAsync(int? id, string title)
         {
-            return await context.Game.FirstOrDefaultAsync(game => game.Title == title);
+            if (id.HasValue)
+                return await context.Game.FirstOrDefaultAsync(game => game.Id != id && game.Title == title);
+            else
+                return await context.Game.FirstOrDefaultAsync(game => game.Title == title);
         }
 
         public async Task UpdateGameAsync(Game game)

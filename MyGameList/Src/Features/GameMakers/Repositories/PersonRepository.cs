@@ -9,7 +9,7 @@ namespace MyGameList.Src.Features.GameMakers.Repositories
         Task<Person> AddAsync(Person person);
         Task<List<Person>> GetAllPersonsAsync();
         Task<Person?> GetPersonByIdAsync(int id);
-        Task<Person?> GetPersonByNameAsync(string name);
+        Task<Person?> GetPersonByNameAsync(int? id, string name);
         Task UpdatePersonAsync(Person person);
         Task DeletePersonAsync(Person person);
         Task<List<Person>> GetPersonListByIdsAsync(List<int> ids);
@@ -35,9 +35,12 @@ namespace MyGameList.Src.Features.GameMakers.Repositories
             return await context.Person.Include(person => person.Gender).FirstOrDefaultAsync(person => person.Id == id);
         }
 
-        public async Task<Person?> GetPersonByNameAsync(string name)
+        public async Task<Person?> GetPersonByNameAsync(int? id, string name)
         {
-            return await context.Person.FirstOrDefaultAsync(person => person.Name == name);
+            if (id.HasValue)
+                return await context.Person.FirstOrDefaultAsync(person => person.Id != id && person.Name == name);
+            else
+                return await context.Person.FirstOrDefaultAsync(person => person.Name == name);
         }
 
         public async Task UpdatePersonAsync(Person person)

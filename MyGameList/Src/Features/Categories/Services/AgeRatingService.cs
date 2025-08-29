@@ -26,7 +26,7 @@ namespace MyGameList.Src.Features.Categories.Services
             if (errValidation is not null)
                 return new Response<AgeRatingResponseDto>(HttpStatusCode.BadRequest, errValidation, null);
 
-            AgeRating? duplicate = await ageRatingRepo.GetAgeRatingByRatingAsync(ageRatingDto.Rating);
+            AgeRating? duplicate = await ageRatingRepo.GetAgeRatingByRatingAsync(null, ageRatingDto.Rating);
             if (duplicate is not null)
                 return new Response<AgeRatingResponseDto>(HttpStatusCode.BadRequest, "AgeRating must be unique.", null);
 
@@ -62,7 +62,7 @@ namespace MyGameList.Src.Features.Categories.Services
             if (existingAgeRating is null)
                 return new Response(HttpStatusCode.NotFound, "AgeRating not found.");
 
-            AgeRating? duplicate = await ageRatingRepo.GetAgeRatingByRatingAsync(ageRatingDto.Rating);
+            AgeRating? duplicate = await ageRatingRepo.GetAgeRatingByRatingAsync(id, ageRatingDto.Rating);
             if (duplicate is not null)
                 return new Response(HttpStatusCode.BadRequest, "AgeRating must be unique.");
 

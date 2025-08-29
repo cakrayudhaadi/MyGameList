@@ -27,7 +27,7 @@ namespace MyGameList.Src.Features.GameMakers.Services
             if (errValidation is not null)
                 return new Response<DeveloperResponseDto>(HttpStatusCode.BadRequest, errValidation, null);
 
-            Developer? duplicate = await developerRepo.GetDeveloperByNameAsync(developerDto.Name);
+            Developer? duplicate = await developerRepo.GetDeveloperByNameAsync(null, developerDto.Name);
             if (duplicate is not null)
                 return new Response<DeveloperResponseDto>(HttpStatusCode.BadRequest, "Developer Name must be unique.", null);
 
@@ -63,7 +63,7 @@ namespace MyGameList.Src.Features.GameMakers.Services
             if (existingDeveloper is null)
                 return new Response(HttpStatusCode.NotFound, "Developer not found.");
 
-            Developer? duplicate = await developerRepo.GetDeveloperByNameAsync(developerDto.Name);
+            Developer? duplicate = await developerRepo.GetDeveloperByNameAsync(id, developerDto.Name);
             if (duplicate is not null)
                 return new Response(HttpStatusCode.BadRequest, "Developer Name must be unique.");
 

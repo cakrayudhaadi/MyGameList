@@ -8,7 +8,7 @@ namespace MyGameList.Src.Features.Categories.Repositories
         Task<Platform> AddAsync(Platform platform);
         Task<List<Platform>> GetAllPlatformsAsync();
         Task<Platform?> GetPlatformByIdAsync(int id);
-        Task<Platform?> GetPlatformByOptionAsync(string option);
+        Task<Platform?> GetPlatformByOptionAsync(int? id, string option);
         Task UpdatePlatformAsync(Platform platform);
         Task DeletePlatformAsync(Platform platform);
         Task<List<Platform>> GetPlatformListByIdsAsync(List<int> ids);
@@ -34,9 +34,12 @@ namespace MyGameList.Src.Features.Categories.Repositories
             return await context.Platform.FindAsync(id);
         }
 
-        public async Task<Platform?> GetPlatformByOptionAsync(string option)
+        public async Task<Platform?> GetPlatformByOptionAsync(int? id, string option)
         {
-            return await context.Platform.FirstOrDefaultAsync(platform => platform.Option == option);
+            if (id.HasValue)
+                return await context.Platform.FirstOrDefaultAsync(platform => platform.Id != id && platform.Option == option);
+            else
+                return await context.Platform.FirstOrDefaultAsync(platform => platform.Option == option);
         }
 
         public async Task UpdatePlatformAsync(Platform platform)

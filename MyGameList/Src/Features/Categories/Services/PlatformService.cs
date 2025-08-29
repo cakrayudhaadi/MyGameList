@@ -27,7 +27,7 @@ namespace MyGameList.Src.Features.Categories.Services
             if (errValidation is not null)
                 return new Response<PlatformResponseDto>(HttpStatusCode.BadRequest, errValidation, null);
 
-            Platform? duplicate = await platformRepo.GetPlatformByOptionAsync(platformDto.Platform);
+            Platform? duplicate = await platformRepo.GetPlatformByOptionAsync(null, platformDto.Platform);
             if (duplicate is not null)
                 return new Response<PlatformResponseDto>(HttpStatusCode.BadRequest, "Platform must be unique.", null);
 
@@ -63,7 +63,7 @@ namespace MyGameList.Src.Features.Categories.Services
             if (existingPlatform is null)
                 return new Response(HttpStatusCode.NotFound, "Platform not found.");
 
-            Platform? duplicate = await platformRepo.GetPlatformByOptionAsync(platformDto.Platform);
+            Platform? duplicate = await platformRepo.GetPlatformByOptionAsync(id, platformDto.Platform);
             if (duplicate is not null)
                 return new Response(HttpStatusCode.BadRequest, "Platform must be unique.");
 

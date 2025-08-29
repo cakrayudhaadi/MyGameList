@@ -27,7 +27,7 @@ namespace MyGameList.Src.Features.Categories.Services
             if (errValidation is not null)
                 return new Response<ModeResponseDto>(HttpStatusCode.BadRequest, errValidation, null);
 
-            Mode? duplicate = await modeRepo.GetModeByOptionAsync(modeDto.Mode);
+            Mode? duplicate = await modeRepo.GetModeByOptionAsync(null, modeDto.Mode);
             if (duplicate is not null)
                 return new Response<ModeResponseDto>(HttpStatusCode.BadRequest, "Mode must be unique.", null);
 
@@ -63,7 +63,7 @@ namespace MyGameList.Src.Features.Categories.Services
             if (existingMode is null)
                 return new Response(HttpStatusCode.NotFound, "Mode not found.");
 
-            Mode? duplicate = await modeRepo.GetModeByOptionAsync(modeDto.Mode);
+            Mode? duplicate = await modeRepo.GetModeByOptionAsync(id, modeDto.Mode);
             if (duplicate is not null)
                 return new Response(HttpStatusCode.BadRequest, "Mode must be unique.");
 

@@ -8,7 +8,7 @@ namespace MyGameList.Src.Features.GameMakers.Repositories
         Task<Developer> AddAsync(Developer developer);
         Task<List<Developer>> GetAllDevelopersAsync();
         Task<Developer?> GetDeveloperByIdAsync(int id);
-        Task<Developer?> GetDeveloperByNameAsync(string name);
+        Task<Developer?> GetDeveloperByNameAsync(int? id, string name);
         Task UpdateDeveloperAsync(Developer developer);
         Task DeleteDeveloperAsync(Developer developer);
         Task<List<Developer>> GetDeveloperListByIdsAsync(List<int> ids);
@@ -34,9 +34,12 @@ namespace MyGameList.Src.Features.GameMakers.Repositories
             return await context.Developer.FindAsync(id);
         }
 
-        public async Task<Developer?> GetDeveloperByNameAsync(string name)
+        public async Task<Developer?> GetDeveloperByNameAsync(int? id, string name)
         {
-            return await context.Developer.FirstOrDefaultAsync(developer => developer.Name == name);
+            if (id.HasValue)
+                return await context.Developer.FirstOrDefaultAsync(developer => developer.Id != id && developer.Name == name);
+            else
+                return await context.Developer.FirstOrDefaultAsync(developer => developer.Name == name);
         }
 
         public async Task UpdateDeveloperAsync(Developer developer)

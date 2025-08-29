@@ -8,7 +8,7 @@ namespace MyGameList.Src.Features.Categories.Repositories
         Task<Mode> AddAsync(Mode mode);
         Task<List<Mode>> GetAllModesAsync();
         Task<Mode?> GetModeByIdAsync(int id);
-        Task<Mode?> GetModeByOptionAsync(string option);
+        Task<Mode?> GetModeByOptionAsync(int? id, string option);
         Task UpdateModeAsync(Mode mode);
         Task DeleteModeAsync(Mode mode);
         Task<List<Mode>> GetModeListByIdsAsync(List<int> ids);
@@ -34,9 +34,12 @@ namespace MyGameList.Src.Features.Categories.Repositories
             return await context.Mode.FindAsync(id);
         }
 
-        public async Task<Mode?> GetModeByOptionAsync(string option)
+        public async Task<Mode?> GetModeByOptionAsync(int? id, string option)
         {
-            return await context.Mode.FirstOrDefaultAsync(mode => mode.Option == option);
+            if (id.HasValue)
+                return await context.Mode.FirstOrDefaultAsync(mode => mode.Id != id && mode.Option == option);
+            else
+                return await context.Mode.FirstOrDefaultAsync(mode => mode.Option == option);
         }
 
         public async Task UpdateModeAsync(Mode mode)
