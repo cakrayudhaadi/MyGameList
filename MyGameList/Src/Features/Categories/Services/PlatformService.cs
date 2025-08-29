@@ -1,7 +1,6 @@
 ﻿using MyGameList.Src.Features.Categories.Dtos;
 using MyGameList.Src.Features.Categories.Models;
 using MyGameList.Src.Features.Categories.Repositories;
-using MyGameList.Src.Features.GameMakers.Models;
 using MyGameList.Src.Shared.Commons;
 using System.Net;
 
@@ -86,9 +85,9 @@ namespace MyGameList.Src.Features.Categories.Services
 
         public async Task<List<Platform>> GetPlatformListByIds(List<int> ids)
         {
-            List<Platform> platform = await platformRepo.GetPlatformListByIdsAsync(ids);
+            List<Platform> platforms = await platformRepo.GetPlatformListByIdsAsync(ids);
 
-            return platform;
+            return platforms;
         }
     }
 }

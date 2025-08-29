@@ -1,5 +1,4 @@
-﻿using MyGameList.Src.Features.Categories.Models;
-using MyGameList.Src.Features.GameMakers.Dtos;
+﻿using MyGameList.Src.Features.GameMakers.Dtos;
 using MyGameList.Src.Features.GameMakers.Models;
 using MyGameList.Src.Features.GameMakers.Repositories;
 using MyGameList.Src.Shared.Commons;
@@ -86,9 +85,9 @@ namespace MyGameList.Src.Features.GameMakers.Services
 
         public async Task<List<Developer>> GetDeveloperListByIds(List<int> ids)
         {
-            List<Developer> developer = await developerRepo.GetDeveloperListByIdsAsync(ids);
+            List<Developer> developers = await developerRepo.GetDeveloperListByIdsAsync(ids);
 
-            return developer;
+            return developers;
         }
     }
 }

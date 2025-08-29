@@ -1,6 +1,4 @@
-﻿using MyGameList.Src.Features.Categories.Dtos;
-using MyGameList.Src.Features.Categories.Models;
-using MyGameList.Src.Features.Categories.Repositories;
+﻿using MyGameList.Src.Features.Categories.Models;
 using MyGameList.Src.Features.Categories.Services;
 using MyGameList.Src.Features.GameMakers.Dtos;
 using MyGameList.Src.Features.GameMakers.Models;
@@ -45,8 +43,8 @@ namespace MyGameList.Src.Features.GameMakers.Services
 
         public async Task<Response<List<PersonResponseDto>>> GetAllPersonsAsync()
         {
-            List<Person> persons = await personRepo.GetAllPersonsAsync();
-            List<PersonResponseDto> personResponseDtos = [.. persons.Select(person => PersonResponseDto.PersonModelToResponseDto(person))];
+            List<Person> people = await personRepo.GetAllPersonsAsync();
+            List<PersonResponseDto> personResponseDtos = [.. people.Select(person => PersonResponseDto.PersonModelToResponseDto(person))];
 
             return new Response<List<PersonResponseDto>>(HttpStatusCode.OK, HttpStatusCode.OK.ToString(), personResponseDtos);
         }
@@ -94,9 +92,9 @@ namespace MyGameList.Src.Features.GameMakers.Services
 
         public async Task<List<Person>> GetPersonListByIds(List<int> ids)
         {
-            List<Person> person = await personRepo.GetPersonListByIdsAsync(ids);
+            List<Person> people = await personRepo.GetPersonListByIdsAsync(ids);
 
-            return person;
+            return people;
         }
     }
 }

@@ -11,14 +11,13 @@ namespace MyGameList.Src.Features.Games.Dtos
             Title = string.Empty;
         }
 
-        public GameResponseDto(int id, string title, string? description, string? plot, int? yearRelease, int? ageRatingId)
+        public GameResponseDto(int id, string title, string? description, string? plot, int? yearRelease)
         {
             Id = id;
             Title = title;
             Description = description;
             Plot = plot;
             YearRelease = yearRelease;
-            AgeRatingId = ageRatingId;
         }
 
         public int Id { get; set; }
@@ -26,7 +25,7 @@ namespace MyGameList.Src.Features.Games.Dtos
         public string? Description { get; set; }
         public string? Plot { get; set; }
         public int? YearRelease { get; set; }
-        public int? AgeRatingId { get; set; }
+        public ICollection<AgeRatingResponseDto> AgeRatings { get; set; } = [];
         public ICollection<DeveloperResponseDto> Developers { get; set; } = [];
         public ICollection<PublisherResponseDto> Publishers { get; set; } = [];
         public ICollection<PersonResponseDto> Producers { get; set; } = [];
@@ -48,7 +47,7 @@ namespace MyGameList.Src.Features.Games.Dtos
                 Description = game.Description,
                 Plot = game.Plot,
                 YearRelease = game.YearRelease,
-                AgeRatingId = game.AgeRatingId,
+                AgeRatings = [.. game.AgeRatings.Select(ageRating => AgeRatingResponseDto.AgeRatingModelToEditGameProperties(ageRating))],
                 Developers = [.. game.Developers.Select(developer => DeveloperResponseDto.DeveloperModelToEditGameProperties(developer))],
                 Publishers = [.. game.Publishers.Select(publisher => PublisherResponseDto.PublisherModelToEditGameProperties(publisher))],
                 Producers = [.. game.Producers.Select(producer => PersonResponseDto.PersonModelToEditGameProperties(producer))],

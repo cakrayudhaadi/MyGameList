@@ -1,7 +1,6 @@
 ﻿using MyGameList.Src.Features.Categories.Dtos;
 using MyGameList.Src.Features.Categories.Models;
 using MyGameList.Src.Features.Categories.Repositories;
-using MyGameList.Src.Features.GameMakers.Dtos;
 using MyGameList.Src.Shared.Commons;
 using System.Net;
 

@@ -26,6 +26,7 @@ namespace MyGameList.Src.Features.Games.Repositories
         public async Task<List<Game>> GetAllGamesAsync()
         {
             return await context.Game
+                .Include(game => game.AgeRatings)
                 .Include(game => game.Developers)
                 .Include(game => game.Publishers)
                 .Include(game => game.Producers)
@@ -38,6 +39,7 @@ namespace MyGameList.Src.Features.Games.Repositories
         public async Task<Game?> GetGameByIdAsync(int id)
         {
             return await context.Game
+                .Include(game => game.AgeRatings)
                 .Include(game => game.Developers)
                 .Include(game => game.Publishers)
                 .Include(game => game.Producers)

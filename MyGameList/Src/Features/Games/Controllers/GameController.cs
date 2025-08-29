@@ -1,9 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using MyGameList.Src.Features.GameMakers.Dtos;
-using MyGameList.Src.Features.GameMakers.Services;
 using MyGameList.Src.Features.Games.Dtos;
-using MyGameList.Src.Features.Games.Models;
 using MyGameList.Src.Features.Games.Services;
 using MyGameList.Src.Shared.Commons;
 using System.Net;

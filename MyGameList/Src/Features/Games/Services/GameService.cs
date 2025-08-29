@@ -1,8 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MyGameList.Src.Features.Categories.Models;
-using MyGameList.Src.Features.Categories.Services;
-using MyGameList.Src.Features.GameMakers.Dtos;
-using MyGameList.Src.Features.GameMakers.Models;
+﻿using MyGameList.Src.Features.Categories.Services;
 using MyGameList.Src.Features.GameMakers.Services;
 using MyGameList.Src.Features.Games.Dtos;
 using MyGameList.Src.Features.Games.Models;
@@ -34,6 +30,7 @@ namespace MyGameList.Src.Features.Games.Services
         {
             Game game = gameDto.GameDtoToModel(existingGame, id);
 
+            await AddGameProperties(existingGame, game.AgeRatings, gameDto.AgeRatingIds, ageRatingService.GetAgeRatingListByIds);
             await AddGameProperties(existingGame, game.Developers, gameDto.DeveloperIds, developerService.GetDeveloperListByIds);
             await AddGameProperties(existingGame, game.Publishers, gameDto.PublisherIds, publisherService.GetPublisherListByIds);
             await AddGameProperties(existingGame, game.Producers, gameDto.ProducerIds, personService.GetPersonListByIds);
@@ -83,13 +80,6 @@ namespace MyGameList.Src.Features.Games.Services
             if (duplicate is not null)
                 return new Response(HttpStatusCode.BadRequest, "Game Title must be unique.");
 
-            if (gameDto.AgeRatingId is not null)
-            {
-                AgeRating? ageRating = await ageRatingService.GetAgeRatingById(gameDto.AgeRatingId.Value);
-                if (ageRating is null)
-                    return new Response(HttpStatusCode.BadRequest, "Age Rating not found.");
-            }
-
             await AddOrUpdateGameFromDto(gameDto, null, null);
 
             return new Response(HttpStatusCode.OK, "Game created successfully.");
@@ -123,13 +113,6 @@ namespace MyGameList.Src.Features.Games.Services
             Game? duplicate = await gameRepo.GetGameByTitleAsync(id, gameDto.Title);
             if (duplicate is not null)
                 return new Response(HttpStatusCode.BadRequest, "Game Title must be unique.");
-
-            if (gameDto.AgeRatingId.HasValue)
-            {
-                AgeRating? ageRating = await ageRatingService.GetAgeRatingById(gameDto.AgeRatingId.Value);
-                if (ageRating is null)
-                    return new Response(HttpStatusCode.BadRequest, "Age Rating not found.");
-            }
 
             await AddOrUpdateGameFromDto(gameDto, existingGame, id);
 

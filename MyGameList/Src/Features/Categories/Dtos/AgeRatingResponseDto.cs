@@ -42,5 +42,24 @@ namespace MyGameList.Src.Features.Categories.Dtos
                 Rating = ageRating.Rating
             };
         }
+
+        public static AgeRatingResponseDto AgeRatingModelToGameProperties(AgeRating ageRating)
+        {
+            return new()
+            {
+                Rating = ageRating.Rating,
+                AgeMinimum = ageRating.AgeMinimum
+            };
+        }
+
+        public static AgeRatingResponseDto AgeRatingModelToEditGameProperties(AgeRating ageRating)
+        {
+            return new()
+            {
+                Id = ageRating.Id,
+                Rating = ageRating.Rating,
+                AgeMinimum = ageRating.AgeMinimum
+            };
+        }
     }
 }

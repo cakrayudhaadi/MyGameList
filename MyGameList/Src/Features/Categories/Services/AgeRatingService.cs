@@ -14,6 +14,7 @@ namespace MyGameList.Src.Features.Categories.Services
         Task<Response> UpdateAgeRatingAsync(int id, AgeRatingDto ageRatingDto);
         Task<Response> DeleteAgeRatingAsync(int id);
         Task<AgeRating?> GetAgeRatingById(int id);
+        Task<List<AgeRating>> GetAgeRatingListByIds(List<int> ids);
     }
 
     public class AgeRatingService(IAgeRatingRepository ageRatingRepo) : IAgeRatingService
@@ -88,6 +89,13 @@ namespace MyGameList.Src.Features.Categories.Services
             AgeRating? ageRating = await ageRatingRepo.GetAgeRatingByIdAsync(id);
 
             return ageRating;
+        }
+
+        public async Task<List<AgeRating>> GetAgeRatingListByIds(List<int> ids)
+        {
+            List<AgeRating> ageRatings = await ageRatingRepo.GetAgeRatingListByIdsAsync(ids);
+
+            return ageRatings;
         }
     }
 }

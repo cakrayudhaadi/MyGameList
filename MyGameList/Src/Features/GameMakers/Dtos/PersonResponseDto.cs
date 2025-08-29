@@ -1,5 +1,5 @@
-﻿using MyGameList.Src.Features.GameMakers.Models;
-using MyGameList.Src.Shared.Commons;
+﻿using MyGameList.Src.Shared.Commons;
+using MyGameList.Src.Features.GameMakers.Models;
 using System.Text.Json.Serialization;
 
 namespace MyGameList.Src.Features.GameMakers.Dtos

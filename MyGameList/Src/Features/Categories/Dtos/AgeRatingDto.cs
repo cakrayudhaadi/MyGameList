@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging.Abstractions;
-using MyGameList.Src.Features.Categories.Models;
+﻿using MyGameList.Src.Features.Categories.Models;
 
 namespace MyGameList.Src.Features.Categories.Dtos
 {

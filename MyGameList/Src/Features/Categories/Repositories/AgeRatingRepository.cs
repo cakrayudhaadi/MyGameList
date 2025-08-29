@@ -11,6 +11,7 @@ namespace MyGameList.Src.Features.Categories.Repositories
         Task<AgeRating?> GetAgeRatingByRatingAsync(int? id, string rating);
         Task UpdateAgeRatingAsync(AgeRating ageRating);
         Task DeleteAgeRatingAsync(AgeRating ageRating);
+        Task<List<AgeRating>> GetAgeRatingListByIdsAsync(List<int> ids);
     }
 
     public class AgeRatingRepository(MyGameListDbContext context) : IAgeRatingRepository
@@ -53,6 +54,13 @@ namespace MyGameList.Src.Features.Categories.Repositories
             ArgumentNullException.ThrowIfNull(ageRating);
             context.AgeRating.Remove(ageRating);
             await context.SaveChangesAsync();
+        }
+
+        public async Task<List<AgeRating>> GetAgeRatingListByIdsAsync(List<int> ids)
+        {
+            return await context.AgeRating
+                .Where(ageRating => ids.Contains(ageRating.Id))
+                .ToListAsync();
         }
     }
 }

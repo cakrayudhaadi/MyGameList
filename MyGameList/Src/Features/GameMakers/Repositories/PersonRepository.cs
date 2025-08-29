@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyGameList.Src.Features.GameMakers.Models;
-using System;
 
 namespace MyGameList.Src.Features.GameMakers.Repositories
 {

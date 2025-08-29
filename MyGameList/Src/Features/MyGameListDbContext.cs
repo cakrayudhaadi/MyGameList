@@ -38,9 +38,9 @@ namespace MyGameList.Src.Features
                 .WithMany(gender => gender.Peoples)
                 .HasForeignKey(person => person.GenderId);
             modelBuilder.Entity<Game>()
-                .HasOne(game => game.AgeRating)
+                .HasMany(game => game.AgeRatings)
                 .WithMany(ageRating => ageRating.Games)
-                .HasForeignKey(game => game.AgeRatingId);
+                .UsingEntity(join => join.ToTable("game_age_ratings"));
             modelBuilder.Entity<Game>()
                 .HasMany(game => game.Developers)
                 .WithMany(developer => developer.Games)

@@ -85,9 +85,9 @@ namespace MyGameList.Src.Features.GameMakers.Services
 
         public async Task<List<Publisher>> GetPublisherListByIds(List<int> ids)
         {
-            List<Publisher> publisher = await publisherRepo.GetPublisherListByIdsAsync(ids);
+            List<Publisher> publishers = await publisherRepo.GetPublisherListByIdsAsync(ids);
 
-            return publisher;
+            return publishers;
         }
     }
 }
