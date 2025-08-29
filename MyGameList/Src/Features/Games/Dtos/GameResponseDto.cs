@@ -34,8 +34,13 @@ namespace MyGameList.Src.Features.Games.Dtos
         public ICollection<ModeResponseDto> Modes { get; set; } = [];
         public ICollection<PlatformResponseDto> Platforms { get; set; } = [];
 
-        public static GameResponseDto GameModelToResponseDto(Game game)
+        public static GameResponseDto GameModelToResponseDto(Game? game)
         {
+            if (game == null)
+            {
+                throw new ArgumentNullException(nameof(game));
+            }
+
             GameResponseDto gameResponseDto = new()
             {
                 Id = game.Id,

@@ -14,7 +14,7 @@ namespace MyGameList.Src.Features.Games.Services
 {
     public interface IGameService
     {
-        Task<Response<GameResponseDto>> AddGameAsync(GameDto gameDto);
+        Task<Response> AddGameAsync(GameDto gameDto);
         Task<Response<List<GameCoverResponseDto>>> GetAllGamesAsync();
         Task<Response<GameResponseDto>> GetGameByIdAsync(int id);
         Task<Response> UpdateGameAsync(int id, GameDto gameDto);
@@ -30,41 +30,69 @@ namespace MyGameList.Src.Features.Games.Services
         IModeService modeService,
         IPlatformService platformService) : IGameService
     {
-        public async Task<Response<GameResponseDto>> AddGameAsync(GameDto gameDto)
+        public async Task AddOrUpdateGameFromDto(GameDto gameDto, Game? existingGame, int? id)
+        {
+            Game game = gameDto.GameDtoToModel(existingGame, id);
+
+            await AddGameProperties(existingGame, game.Developers, gameDto.DeveloperIds, developerService.GetDeveloperListByIds);
+            await AddGameProperties(existingGame, game.Publishers, gameDto.PublisherIds, publisherService.GetPublisherListByIds);
+            await AddGameProperties(existingGame, game.Producers, gameDto.ProducerIds, personService.GetPersonListByIds);
+            await AddGameProperties(existingGame, game.Genres, gameDto.GenreIds, genreService.GetGenreListByIds);
+            await AddGameProperties(existingGame, game.Modes, gameDto.ModeIds, modeService.GetModeListByIds);
+            await AddGameProperties(existingGame, game.Platforms, gameDto.PlatformIds, platformService.GetPlatformListByIds);
+
+            if (!id.HasValue)
+            {
+                await gameRepo.AddAsync(game);
+            }
+            else
+            {
+                await gameRepo.UpdateGameAsync(game);
+            }
+        }
+
+        // Helper function to process and add associations
+        public async Task AddGameProperties<T>(
+            Game? existingGame,
+            ICollection<T> existingCollection,
+            List<int> dtoIds,
+            Func<List<int>, Task<List<T>>> getByIdsFunc)
+        {
+            var idsToAdd = existingGame is not null
+                ? [.. dtoIds.Except(existingCollection.Select(item => (int)typeof(T).GetProperty("Id")?.GetValue(item)!))]
+                : dtoIds;
+
+            var newItems = await getByIdsFunc(idsToAdd);
+
+            foreach (var item in newItems)
+            {
+                existingCollection.Add(item);
+            }
+        }
+
+
+        public async Task<Response> AddGameAsync(GameDto gameDto)
         {
             ArgumentNullException.ThrowIfNull(gameDto);
 
             string? errValidation = gameDto.GameValidation();
             if (errValidation is not null)
-                return new Response<GameResponseDto>(HttpStatusCode.BadRequest, errValidation, null);
+                return new Response(HttpStatusCode.BadRequest, errValidation);
 
             Game? duplicate = await gameRepo.GetGameByTitleAsync(gameDto.Title);
             if (duplicate is not null)
-                return new Response<GameResponseDto>(HttpStatusCode.BadRequest, "Game Title must be unique.", null);
+                return new Response(HttpStatusCode.BadRequest, "Game Title must be unique.");
 
-            AgeRating? ageRating = await ageRatingService.GetAgeRatingById(gameDto.AgeRatingId.Value);
-            if (ageRating is null)
-                return new Response<GameResponseDto>(HttpStatusCode.BadRequest, "Age Rating not found.", null);
+            if (gameDto.AgeRatingId is not null)
+            {
+                AgeRating? ageRating = await ageRatingService.GetAgeRatingById(gameDto.AgeRatingId.Value);
+                if (ageRating is null)
+                    return new Response(HttpStatusCode.BadRequest, "Age Rating not found.");
+            }
 
-            List<Developer> developers = await developerService.GetDeveloperListByIds(gameDto.DeveloperIds);
-            List<Publisher> publishers = await publisherService.GetPublisherListByIds(gameDto.PublisherIds);
-            List<Person> persons = await personService.GetPersonListByIds(gameDto.ProducerIds);
-            List<Genre> genres = await genreService.GetGenreListByIds(gameDto.GenreIds);
-            List<Mode> modes = await modeService.GetModeListByIds(gameDto.ModeIds);
-            List<Platform> platforms = await platformService.GetPlatformListByIds(gameDto.PlatformIds);
+            await AddOrUpdateGameFromDto(gameDto, null, null);
 
-            Game game = gameDto.GameDtoToModel(null, null);
-            game.Developers = developers;
-            game.Publishers = publishers;
-            game.Producers = persons;
-            game.Genres = genres;
-            game.Modes = modes;
-            game.Platforms = platforms;
-
-            Game newGame = await gameRepo.AddAsync(game);
-            GameResponseDto gameResponseDto = GameResponseDto.GameModelToResponseDto(newGame);
-
-            return new Response<GameResponseDto>(HttpStatusCode.OK, "Game created successfully.", gameResponseDto);
+            return new Response(HttpStatusCode.OK, "Game created successfully.");
         }
 
         public async Task<Response<List<GameCoverResponseDto>>> GetAllGamesAsync()
@@ -103,22 +131,7 @@ namespace MyGameList.Src.Features.Games.Services
                     return new Response(HttpStatusCode.BadRequest, "Age Rating not found.");
             }
 
-            List<Developer> developers = await developerService.GetDeveloperListByIds(gameDto.DeveloperIds);
-            List<Publisher> publishers = await publisherService.GetPublisherListByIds(gameDto.PublisherIds);
-            List<Person> persons = await personService.GetPersonListByIds(gameDto.ProducerIds);
-            List<Genre> genres = await genreService.GetGenreListByIds(gameDto.GenreIds);
-            List<Mode> modes = await modeService.GetModeListByIds(gameDto.ModeIds);
-            List<Platform> platforms = await platformService.GetPlatformListByIds(gameDto.PlatformIds);
-
-            Game updatedGame = gameDto.GameDtoToModel(existingGame, id);
-            updatedGame.Developers = developers;
-            updatedGame.Publishers = publishers;
-            updatedGame.Producers = persons;
-            updatedGame.Genres = genres;
-            updatedGame.Modes = modes;
-            updatedGame.Platforms = platforms;
-
-            await gameRepo.UpdateGameAsync(updatedGame);
+            await AddOrUpdateGameFromDto(gameDto, existingGame, id);
 
             return new Response(HttpStatusCode.OK, "Game updated successfully.");
         }

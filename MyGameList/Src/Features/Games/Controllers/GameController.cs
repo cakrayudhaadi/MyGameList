@@ -17,15 +17,15 @@ namespace MyGameList.Src.Features.Games.Controllers
         private readonly ResponseHandler res = new();
 
         [HttpPost]
-        public async Task<ActionResult<ApiResponse<GameResponseDto>>> AddGame(GameDto gameDto)
+        public async Task<ActionResult<ApiResponse>> AddGame(GameDto gameDto)
         {
             try
             {
-                return res.Result<GameResponseDto>(await gameService.AddGameAsync(gameDto));
+                return res.Result(await gameService.AddGameAsync(gameDto));
             }
             catch (ArgumentException ex)
             {
-                return res.Result<GameResponseDto>(HttpStatusCode.InternalServerError, ex.Message, null);
+                return res.Result(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
 
