@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MyGameList.Src.Features.Games.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace MyGameList.Src.Features.Categories.Models
 {
@@ -39,5 +41,8 @@ namespace MyGameList.Src.Features.Categories.Models
         public DateTime? CreatedAt { get; set; }
         [Column("updated_at")]
         public DateTime? UpdatedAt { get; set; }
+
+        [JsonIgnore]
+        public ICollection<Game>? Games { get; set; }
     }
 }

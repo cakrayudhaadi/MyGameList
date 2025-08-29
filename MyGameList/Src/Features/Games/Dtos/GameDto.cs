@@ -1,4 +1,5 @@
 ﻿using MyGameList.Src.Features.Games.Models;
+using System.Xml.Linq;
 
 namespace MyGameList.Src.Features.Games.Dtos
 {
@@ -7,17 +8,22 @@ namespace MyGameList.Src.Features.Games.Dtos
         public GameDto()
         {
             Title = string.Empty;
-            Description = string.Empty;
         }
 
-        public GameDto(string title, string description)
+        public GameDto(string title, string? description, string? plot, int? yearRelease, int? ageRatingId)
         {
             Title = title;
             Description = description;
+            Plot = plot;
+            YearRelease = yearRelease;
+            AgeRatingId = ageRatingId;
         }
 
         public string Title { get; set; }
-        public string Description { get; set; }
+        public string? Description { get; set; }
+        public string? Plot { get; set; }
+        public int? YearRelease { get; set; }
+        public int? AgeRatingId { get; set; }
 
         public Game GamesDtoToModel(Game? game, int? id)
         {
@@ -26,7 +32,10 @@ namespace MyGameList.Src.Features.Games.Dtos
 
             game.Title = Title is not null ? Title : game.Title;
             game.Description = Description is not null ? Description : game.Description;
-            if(!id.HasValue) {
+            game.Plot = Plot is not null ? Plot : game.Plot;
+            game.YearRelease = YearRelease is not null ? YearRelease : game.YearRelease;
+            game.AgeRatingId = AgeRatingId is not null ? AgeRatingId : game.AgeRatingId;
+            if (!id.HasValue) {
                 game.CreatedAt = timeNow;
                 game.UpdatedAt = timeNow;
             } else {
@@ -35,6 +44,14 @@ namespace MyGameList.Src.Features.Games.Dtos
             }
 
             return game;
+        }
+
+        public string? GameValidation()
+        {
+            if (string.IsNullOrEmpty(Title))
+                return "Title is required";
+
+            return null;
         }
     }
 }

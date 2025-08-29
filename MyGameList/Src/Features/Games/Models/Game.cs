@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using MyGameList.Src.Features.Categories.Models;
+using MyGameList.Src.Features.GameMakers.Models;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyGameList.Src.Features.Games.Models
 {
@@ -25,9 +27,23 @@ namespace MyGameList.Src.Features.Games.Models
         public string Title { get; set; }
         [Column("description")]
         public string? Description { get; set; }
+        [Column("plot")]
+        public string? Plot { get; set; }
+        [Column("year_release")]
+        public int? YearRelease { get; set; }
+        [Column("age_rating_id")]
+        public int? AgeRatingId { get; set; }
         [Column("created_at")]
         public DateTime? CreatedAt { get; set; }
         [Column("updated_at")]
         public DateTime? UpdatedAt { get; set; }
+
+        public AgeRating? AgeRating { get; set; }
+        public ICollection<Developer> Developers { get; set; } = [];
+        public ICollection<Publisher> Publishers { get; set; } = [];
+        public ICollection<Person> Producers { get; set; } = [];
+        public ICollection<Genre> Genres { get; set; } = [];
+        public ICollection<Mode> Modes { get; set; } = [];
+        public ICollection<Platform> Platforms { get; set; } = [];
     }
 }
