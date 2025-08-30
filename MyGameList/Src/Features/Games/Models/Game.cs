@@ -1,5 +1,7 @@
 ﻿using MyGameList.Src.Features.Categories.Models;
+using MyGameList.Src.Features.Characters.Models;
 using MyGameList.Src.Features.GameMakers.Models;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyGameList.Src.Features.Games.Models
@@ -24,6 +26,7 @@ namespace MyGameList.Src.Features.Games.Models
         [Column("id")]
         public int Id { get; set; }
         [Column("title")]
+        [Required]
         public string Title { get; set; }
         [Column("description")]
         public string? Description { get; set; }
@@ -43,5 +46,6 @@ namespace MyGameList.Src.Features.Games.Models
         public ICollection<Genre> Genres { get; set; } = [];
         public ICollection<Mode> Modes { get; set; } = [];
         public ICollection<Platform> Platforms { get; set; } = [];
+        public ICollection<Character> Characters { get; set; } = [];
     }
 }

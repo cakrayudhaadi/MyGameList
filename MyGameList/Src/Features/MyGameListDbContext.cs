@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyGameList.Src.Features.Categories.Models;
+using MyGameList.Src.Features.Characters.Models;
 using MyGameList.Src.Features.GameMakers.Models;
 using MyGameList.Src.Features.Games.Models;
 
@@ -30,6 +31,8 @@ namespace MyGameList.Src.Features
         // Users
 
         // Characters
+        public DbSet<Character> Character => Set<Character>();
+        public DbSet<CharacterRole> CharacterRole => Set<CharacterRole>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -37,6 +40,10 @@ namespace MyGameList.Src.Features
                 .HasOne(person => person.Gender)
                 .WithMany(gender => gender.Peoples)
                 .HasForeignKey(person => person.GenderId);
+            modelBuilder.Entity<Character>()
+                .HasOne(character => character.CharacterRole)
+                .WithMany(characterRole => characterRole.Characters)
+                .HasForeignKey(character => character.CharacterRoleId);
             modelBuilder.Entity<Game>()
                 .HasMany(game => game.AgeRatings)
                 .WithMany(ageRating => ageRating.Games)
@@ -65,6 +72,10 @@ namespace MyGameList.Src.Features
                 .HasMany(game => game.Platforms)
                 .WithMany(platform => platform.Games)
                 .UsingEntity(join => join.ToTable("game_platforms"));
+            modelBuilder.Entity<Game>()
+                .HasMany(game => game.Characters)
+                .WithMany(character => character.Games)
+                .UsingEntity(join => join.ToTable("game_characters"));
 
             base.OnModelCreating(modelBuilder);
         }
