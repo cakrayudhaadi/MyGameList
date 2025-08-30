@@ -21,7 +21,7 @@ namespace MyGameList.Src.Features.Categories.Dtos
             platform ??= new Platform();
             DateTime timeNow = DateTime.UtcNow;
 
-            platform.Option = Platform is not null ? Platform : platform.Option;
+            platform.Option = !string.IsNullOrEmpty(Platform) ? Platform : platform.Option;
             if (!id.HasValue)
             {
                 platform.CreatedAt = timeNow;

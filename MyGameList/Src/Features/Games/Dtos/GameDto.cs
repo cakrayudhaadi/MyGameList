@@ -36,7 +36,7 @@ namespace MyGameList.Src.Features.Games.Dtos
             game.Title = !string.IsNullOrEmpty(Title) ? Title : game.Title;
             game.Description = !string.IsNullOrEmpty(Description) ? Description : game.Description;
             game.Plot = !string.IsNullOrEmpty(Plot) ? Plot : game.Plot;
-            game.YearRelease = YearRelease is not null ? YearRelease : game.YearRelease;
+            game.YearRelease = YearRelease.HasValue ? YearRelease : game.YearRelease;
             if (!id.HasValue) {
                 game.CreatedAt = timeNow;
                 game.UpdatedAt = timeNow;

@@ -21,7 +21,7 @@ namespace MyGameList.Src.Features.Categories.Dtos
             genre ??= new Genre();
             DateTime timeNow = DateTime.UtcNow;
 
-            genre.Option = Genre is not null ? Genre : genre.Option;
+            genre.Option = !string.IsNullOrEmpty(Genre) ? Genre : genre.Option;
             if (!id.HasValue)
             {
                 genre.CreatedAt = timeNow;

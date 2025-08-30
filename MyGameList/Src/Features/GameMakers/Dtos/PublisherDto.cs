@@ -27,10 +27,10 @@ namespace MyGameList.Src.Features.GameMakers.Dtos
             publisher ??= new Publisher();
             DateTime timeNow = DateTime.UtcNow;
 
-            publisher.Name = Name is not null ? Name : publisher.Name;
-            publisher.Description = Description is not null ? Description : publisher.Description;
-            publisher.EstablishedIn = EstablishedIn is not null ? EstablishedIn : publisher.EstablishedIn;
-            publisher.Website = Website is not null ? Website : publisher.Website;
+            publisher.Name = !string.IsNullOrEmpty(Name) ? Name : publisher.Name;
+            publisher.Description = !string.IsNullOrEmpty(Description) ? Description : publisher.Description;
+            publisher.EstablishedIn = EstablishedIn.HasValue ? EstablishedIn : publisher.EstablishedIn;
+            publisher.Website = !string.IsNullOrEmpty(Website) ? Website : publisher.Website;
             if (!id.HasValue)
             {
                 publisher.CreatedAt = timeNow;
