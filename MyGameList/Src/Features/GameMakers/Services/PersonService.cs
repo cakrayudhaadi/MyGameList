@@ -28,9 +28,13 @@ namespace MyGameList.Src.Features.GameMakers.Services
             if (errValidation is not null)
                 return new Response<PersonResponseDto>(HttpStatusCode.BadRequest, errValidation, null);
 
-            Gender? gender = await genderService.GetGenderById(personDto.GenderId.Value);
-            if (gender is null)
-                return new Response<PersonResponseDto>(HttpStatusCode.BadRequest, "Gender not found.", null);
+            Gender? gender = null;
+            if (personDto.GenderId.HasValue)
+            {
+                gender = await genderService.GetGenderById(personDto.GenderId.Value);
+                if (gender is null)
+                    return new Response<PersonResponseDto>(HttpStatusCode.BadRequest, "Gender not found.", null);
+            }
 
             Person person = personDto.PersonDtoToModel(null, null);
             person.Gender = gender;

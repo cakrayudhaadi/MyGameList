@@ -21,7 +21,7 @@ namespace MyGameList.Src.Features.Categories.Dtos
             mode ??= new Mode();
             DateTime timeNow = DateTime.UtcNow;
 
-            mode.Option = Mode is not null ? Mode : mode.Option;
+            mode.Option = !string.IsNullOrEmpty(Mode) ? Mode : mode.Option;
             if (!id.HasValue)
             {
                 mode.CreatedAt = timeNow;

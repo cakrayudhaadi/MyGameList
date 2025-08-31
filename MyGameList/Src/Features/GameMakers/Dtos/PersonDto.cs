@@ -30,10 +30,10 @@ namespace MyGameList.Src.Features.GameMakers.Dtos
             person ??= new Person();
             DateTime timeNow = DateTime.UtcNow;
 
-            person.Name = Name is not null ? Name : person.Name;
-            person.Bio = Bio is not null ? Bio : person.Bio;
-            person.GenderId = GenderId is not null ? GenderId : person.GenderId;
-            person.Birthday = Birthday is not null ? Birthday : person.Birthday;
+            person.Name = !string.IsNullOrEmpty(Name) ? Name : person.Name;
+            person.Bio = !string.IsNullOrEmpty(Bio) ? Bio : person.Bio;
+            person.GenderId = GenderId.HasValue ? GenderId : person.GenderId;
+            person.Birthday = Birthday.HasValue ? Birthday : person.Birthday;
             if (!id.HasValue)
             {
                 person.CreatedAt = timeNow;
@@ -52,8 +52,6 @@ namespace MyGameList.Src.Features.GameMakers.Dtos
         {
             if (string.IsNullOrEmpty(Name))
                 return "Name is required";
-            if (!GenderId.HasValue)
-                return "GenderId is required";
 
             return null;
         }

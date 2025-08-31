@@ -1,4 +1,5 @@
 ﻿using MyGameList.Src.Features.Categories.Models;
+using System.Data;
 
 namespace MyGameList.Src.Features.Categories.Dtos
 {
@@ -26,8 +27,8 @@ namespace MyGameList.Src.Features.Categories.Dtos
             ageRating ??= new AgeRating();
             DateTime timeNow = DateTime.UtcNow;
 
-            ageRating.Rating = Rating is not null ? Rating : ageRating.Rating;
-            ageRating.Description = Description is not null ? Description : ageRating.Description;
+            ageRating.Rating = !string.IsNullOrEmpty(Rating) ? Rating : ageRating.Rating;
+            ageRating.Description = !string.IsNullOrEmpty(Description) ? Description : ageRating.Description;
             ageRating.AgeMinimum = AgeMinimum;
             if (!id.HasValue)
             {

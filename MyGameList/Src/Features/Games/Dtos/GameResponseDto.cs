@@ -1,4 +1,5 @@
 ﻿using MyGameList.Src.Features.Categories.Dtos;
+using MyGameList.Src.Features.Characters.Dtos;
 using MyGameList.Src.Features.GameMakers.Dtos;
 using MyGameList.Src.Features.Games.Models;
 
@@ -8,10 +9,9 @@ namespace MyGameList.Src.Features.Games.Dtos
     {
         public GameResponseDto()
         {
-            Title = string.Empty;
         }
 
-        public GameResponseDto(int id, string title, string? description, string? plot, int? yearRelease)
+        public GameResponseDto(int id, string? title, string? description, string? plot, int? yearRelease)
         {
             Id = id;
             Title = title;
@@ -21,7 +21,7 @@ namespace MyGameList.Src.Features.Games.Dtos
         }
 
         public int Id { get; set; }
-        public string Title { get; set; }
+        public string? Title { get; set; }
         public string? Description { get; set; }
         public string? Plot { get; set; }
         public int? YearRelease { get; set; }
@@ -32,13 +32,11 @@ namespace MyGameList.Src.Features.Games.Dtos
         public ICollection<GenreResponseDto> Genres { get; set; } = [];
         public ICollection<ModeResponseDto> Modes { get; set; } = [];
         public ICollection<PlatformResponseDto> Platforms { get; set; } = [];
+        public ICollection<CharacterCoverResponseDto> Characters { get; set; } = [];
 
         public static GameResponseDto GameModelToResponseDto(Game? game)
         {
-            if (game == null)
-            {
-                throw new ArgumentNullException(nameof(game));
-            }
+            ArgumentNullException.ThrowIfNull(game);
 
             GameResponseDto gameResponseDto = new()
             {
@@ -53,7 +51,8 @@ namespace MyGameList.Src.Features.Games.Dtos
                 Producers = [.. game.Producers.Select(producer => PersonResponseDto.PersonModelToEditGameProperties(producer))],
                 Genres = [.. game.Genres.Select(genre => GenreResponseDto.GenreModelToEditGameProperties(genre))],
                 Modes = [.. game.Modes.Select(mode => ModeResponseDto.ModeModelToEditGameProperties(mode))],
-                Platforms = [.. game.Platforms.Select(platform => PlatformResponseDto.PlatformModelToEditGameProperties(platform))]
+                Platforms = [.. game.Platforms.Select(platform => PlatformResponseDto.PlatformModelToEditGameProperties(platform))],
+                Characters = [.. game.Characters.Select(character => CharacterCoverResponseDto.CharacterModelToCoverResponseDto(character))]
             };
 
             return gameResponseDto;
@@ -63,10 +62,9 @@ namespace MyGameList.Src.Features.Games.Dtos
     {
         public GameCoverResponseDto()
         {
-            Title = string.Empty;
         }
 
-        public GameCoverResponseDto(int id, string title, int? yearRelease)
+        public GameCoverResponseDto(int id, string? title, int? yearRelease)
         {
             Id = id;
             Title = title;
@@ -74,7 +72,7 @@ namespace MyGameList.Src.Features.Games.Dtos
         }
 
         public int Id { get; set; }
-        public string Title { get; set; }
+        public string? Title { get; set; }
         public int? YearRelease { get; set; }
 
         public static GameCoverResponseDto GameModelToCoverResponseDto(Game game)

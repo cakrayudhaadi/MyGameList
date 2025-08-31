@@ -27,10 +27,10 @@ namespace MyGameList.Src.Features.GameMakers.Dtos
             developer ??= new Developer();
             DateTime timeNow = DateTime.UtcNow;
 
-            developer.Name = Name is not null ? Name : developer.Name;
-            developer.Description = Description is not null ? Description : developer.Description;
-            developer.EstablishedIn = EstablishedIn is not null ? EstablishedIn : developer.EstablishedIn;
-            developer.Website = Website is not null ? Website : developer.Website;
+            developer.Name = !string.IsNullOrEmpty(Name) ? Name : developer.Name;
+            developer.Description = !string.IsNullOrEmpty(Description) ? Description : developer.Description;
+            developer.EstablishedIn = EstablishedIn.HasValue ? EstablishedIn : developer.EstablishedIn;
+            developer.Website = !string.IsNullOrEmpty(Website) ? Website : developer.Website;
             if (!id.HasValue)
             {
                 developer.CreatedAt = timeNow;

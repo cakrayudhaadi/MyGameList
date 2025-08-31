@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MyGameList.Src.Features.Categories.Models;
 using MyGameList.Src.Features.Games.Models;
 
 namespace MyGameList.Src.Features.Games.Repositories
@@ -11,6 +12,7 @@ namespace MyGameList.Src.Features.Games.Repositories
         Task<Game?> GetGameByTitleAsync(int? id, string title);
         Task UpdateGameAsync(Game game);
         Task DeleteGameAsync(Game game);
+        Task<List<Game>> GetGameListByIdsAsync(List<int> ids);
     }
 
     public class GameRepository(MyGameListDbContext context) : IGameRepository
@@ -69,6 +71,13 @@ namespace MyGameList.Src.Features.Games.Repositories
             ArgumentNullException.ThrowIfNull(game);
             context.Game.Remove(game);
             await context.SaveChangesAsync();
+        }
+
+        public async Task<List<Game>> GetGameListByIdsAsync(List<int> ids)
+        {
+            return await context.Game
+                .Where(game => ids.Contains(game.Id))
+                .ToListAsync();
         }
     }
 }

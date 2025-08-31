@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyGameList.Src.Features;
 
@@ -11,9 +12,11 @@ using MyGameList.Src.Features;
 namespace MyGameList.Migrations
 {
     [DbContext(typeof(MyGameListDbContext))]
-    partial class MyGameListDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250830144151_AddCharacterFeature")]
+    partial class AddCharacterFeature
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,21 +38,6 @@ namespace MyGameList.Migrations
                     b.HasIndex("GamesId");
 
                     b.ToTable("game_age_ratings", (string)null);
-                });
-
-            modelBuilder.Entity("CharacterGame", b =>
-                {
-                    b.Property<int>("CharactersId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GamesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CharactersId", "GamesId");
-
-                    b.HasIndex("GamesId");
-
-                    b.ToTable("game_characters", (string)null);
                 });
 
             modelBuilder.Entity("DeveloperGame", b =>
@@ -547,21 +535,6 @@ namespace MyGameList.Migrations
                     b.HasOne("MyGameList.Src.Features.Categories.Models.AgeRating", null)
                         .WithMany()
                         .HasForeignKey("AgeRatingsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MyGameList.Src.Features.Games.Models.Game", null)
-                        .WithMany()
-                        .HasForeignKey("GamesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("CharacterGame", b =>
-                {
-                    b.HasOne("MyGameList.Src.Features.Characters.Models.Character", null)
-                        .WithMany()
-                        .HasForeignKey("CharactersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -16,11 +16,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Src\Features\Characters\Controllers\" />
-	  <Folder Include="Src\Features\Characters\Dtos\" />
-	  <Folder Include="Src\Features\Characters\Models\" />
-	  <Folder Include="Src\Features\Characters\Repositories\" />
-	  <Folder Include="Src\Features\Characters\Services\" />
 	  <Folder Include="Src\Features\Users\Controllers\" />
 	  <Folder Include="Src\Features\Users\Dtos\" />
 	  <Folder Include="Src\Features\Users\Models\" />
