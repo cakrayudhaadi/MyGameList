@@ -43,7 +43,6 @@ namespace MyGameList.Src.Features.GameMakers.Models
         public DateTime? UpdatedAt { get; set; }
 
         public Gender? Gender { get; set; }
-
         public ICollection<Game> Games { get; set; } = [];
     }
 }

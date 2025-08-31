@@ -1,9 +1,11 @@
 ﻿using MyGameList.Src.Features.Categories.Services;
+using MyGameList.Src.Features.Characters.Services;
 using MyGameList.Src.Features.GameMakers.Services;
 using MyGameList.Src.Features.Games.Dtos;
 using MyGameList.Src.Features.Games.Models;
 using MyGameList.Src.Features.Games.Repositories;
 using MyGameList.Src.Shared.Commons;
+using MyGameList.Src.Shared.Utils;
 using System.Net;
 
 namespace MyGameList.Src.Features.Games.Services
@@ -24,19 +26,21 @@ namespace MyGameList.Src.Features.Games.Services
         IPersonService personService,
         IGenreService genreService,
         IModeService modeService,
-        IPlatformService platformService) : IGameService
+        IPlatformService platformService,
+        IGameCharacterService gameCharacterService) : IGameService
     {
         public async Task AddOrUpdateGameFromDto(GameDto gameDto, Game? existingGame, int? id)
         {
             Game game = gameDto.GameDtoToModel(existingGame, id);
 
-            await AddGameProperties(existingGame, game.AgeRatings, gameDto.AgeRatingIds, ageRatingService.GetAgeRatingListByIds);
-            await AddGameProperties(existingGame, game.Developers, gameDto.DeveloperIds, developerService.GetDeveloperListByIds);
-            await AddGameProperties(existingGame, game.Publishers, gameDto.PublisherIds, publisherService.GetPublisherListByIds);
-            await AddGameProperties(existingGame, game.Producers, gameDto.ProducerIds, personService.GetPersonListByIds);
-            await AddGameProperties(existingGame, game.Genres, gameDto.GenreIds, genreService.GetGenreListByIds);
-            await AddGameProperties(existingGame, game.Modes, gameDto.ModeIds, modeService.GetModeListByIds);
-            await AddGameProperties(existingGame, game.Platforms, gameDto.PlatformIds, platformService.GetPlatformListByIds);
+            await Util.AddCollectionProperties(game.AgeRatings, gameDto.AgeRatingIds, ageRatingService.GetAgeRatingListByIds);
+            await Util.AddCollectionProperties(game.Developers, gameDto.DeveloperIds, developerService.GetDeveloperListByIds);
+            await Util.AddCollectionProperties(game.Publishers, gameDto.PublisherIds, publisherService.GetPublisherListByIds);
+            await Util.AddCollectionProperties(game.Producers, gameDto.ProducerIds, personService.GetPersonListByIds);
+            await Util.AddCollectionProperties(game.Genres, gameDto.GenreIds, genreService.GetGenreListByIds);
+            await Util.AddCollectionProperties(game.Modes, gameDto.ModeIds, modeService.GetModeListByIds);
+            await Util.AddCollectionProperties(game.Platforms, gameDto.PlatformIds, platformService.GetPlatformListByIds);
+            await Util.AddCollectionProperties(game.Characters, gameDto.CharacterIds, gameCharacterService.GetCharacterListByIds);
 
             if (!id.HasValue)
             {
@@ -47,26 +51,6 @@ namespace MyGameList.Src.Features.Games.Services
                 await gameRepo.UpdateGameAsync(game);
             }
         }
-
-        // Helper function to process and add associations
-        public async Task AddGameProperties<T>(
-            Game? existingGame,
-            ICollection<T> existingCollection,
-            List<int> dtoIds,
-            Func<List<int>, Task<List<T>>> getByIdsFunc)
-        {
-            var idsToAdd = existingGame is not null
-                ? [.. dtoIds.Except(existingCollection.Select(item => (int)typeof(T).GetProperty("Id")?.GetValue(item)!))]
-                : dtoIds;
-
-            var newItems = await getByIdsFunc(idsToAdd);
-
-            foreach (var item in newItems)
-            {
-                existingCollection.Add(item);
-            }
-        }
-
 
         public async Task<Response> AddGameAsync(GameDto gameDto)
         {

@@ -26,12 +26,16 @@ namespace MyGameList.Src.Features.GameMakers.Repositories
 
         public async Task<List<Person>> GetAllPersonsAsync()
         {
-            return await context.Person.Include(person => person.Gender).ToListAsync();
+            return await context.Person
+                .Include(person => person.Gender)
+                .ToListAsync();
         }
 
         public async Task<Person?> GetPersonByIdAsync(int id)
         {
-            return await context.Person.Include(person => person.Gender).FirstOrDefaultAsync(person => person.Id == id);
+            return await context.Person
+                .Include(person => person.Gender)
+                .FirstOrDefaultAsync(person => person.Id == id);
         }
 
         public async Task<Person?> GetPersonByNameAsync(int? id, string name)

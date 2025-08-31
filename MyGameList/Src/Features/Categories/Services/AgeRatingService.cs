@@ -27,11 +27,11 @@ namespace MyGameList.Src.Features.Categories.Services
             if (errValidation is not null)
                 return new Response<AgeRatingResponseDto>(HttpStatusCode.BadRequest, errValidation, null);
 
-            AgeRating? duplicate = await ageRatingRepo.GetAgeRatingByRatingAsync(null, ageRatingDto.Rating);
+            AgeRating ageRating = ageRatingDto.AgeRatingDtoToModel(null, null);
+            AgeRating? duplicate = await ageRatingRepo.IsDataDuplicateAsync(null, ageRating);
             if (duplicate is not null)
                 return new Response<AgeRatingResponseDto>(HttpStatusCode.BadRequest, "AgeRating must be unique.", null);
 
-            AgeRating ageRating = ageRatingDto.AgeRatingDtoToModel(null, null);
             AgeRating newAgeRating = await ageRatingRepo.AddAsync(ageRating);
             AgeRatingResponseDto ageRatingResponseDto = AgeRatingResponseDto.AgeRatingModelToResponseDto(newAgeRating);
 
@@ -40,7 +40,7 @@ namespace MyGameList.Src.Features.Categories.Services
 
         public async Task<Response<List<AgeRatingResponseDto>>> GetAllAgeRatingsAsync()
         {
-            List<AgeRating> ageRatings = await ageRatingRepo.GetAllAgeRatingsAsync();
+            List<AgeRating> ageRatings = await ageRatingRepo.GetAllDatasAsync();
             List<AgeRatingResponseDto> ageRatingResponseDtos = [.. ageRatings.Select(ageRating => AgeRatingResponseDto.AgeRatingModelToResponseDto(ageRating))];
 
             return new Response<List<AgeRatingResponseDto>>(HttpStatusCode.OK, HttpStatusCode.OK.ToString(), ageRatingResponseDtos);
@@ -48,7 +48,7 @@ namespace MyGameList.Src.Features.Categories.Services
 
         public async Task<Response<AgeRatingResponseDto>> GetAgeRatingByIdAsync(int id)
         {
-            AgeRating? ageRating = await ageRatingRepo.GetAgeRatingByIdAsync(id);
+            AgeRating? ageRating = await ageRatingRepo.GetDataByIdAsync(id);
             if (ageRating is null)
                 return new Response<AgeRatingResponseDto>(HttpStatusCode.NotFound, "AgeRating not found.", null);
 
@@ -59,41 +59,41 @@ namespace MyGameList.Src.Features.Categories.Services
 
         public async Task<Response> UpdateAgeRatingAsync(int id, AgeRatingDto ageRatingDto)
         {
-            AgeRating? existingAgeRating = await ageRatingRepo.GetAgeRatingByIdAsync(id);
+            AgeRating? existingAgeRating = await ageRatingRepo.GetDataByIdAsync(id);
             if (existingAgeRating is null)
                 return new Response(HttpStatusCode.NotFound, "AgeRating not found.");
 
-            AgeRating? duplicate = await ageRatingRepo.GetAgeRatingByRatingAsync(id, ageRatingDto.Rating);
+            AgeRating updatedAgeRating = ageRatingDto.AgeRatingDtoToModel(existingAgeRating, id);
+            AgeRating? duplicate = await ageRatingRepo.IsDataDuplicateAsync(id, updatedAgeRating);
             if (duplicate is not null)
                 return new Response(HttpStatusCode.BadRequest, "AgeRating must be unique.");
 
-            AgeRating updatedAgeRating = ageRatingDto.AgeRatingDtoToModel(existingAgeRating, id);
-            await ageRatingRepo.UpdateAgeRatingAsync(updatedAgeRating);
+            await ageRatingRepo.UpdateDataAsync(updatedAgeRating);
 
             return new Response(HttpStatusCode.OK, "AgeRating updated successfully.");
         }
 
         public async Task<Response> DeleteAgeRatingAsync(int id)
         {
-            AgeRating? existingAgeRating = await ageRatingRepo.GetAgeRatingByIdAsync(id);
+            AgeRating? existingAgeRating = await ageRatingRepo.GetDataByIdAsync(id);
             if (existingAgeRating is null)
                 return new Response(HttpStatusCode.NotFound, "AgeRating not found.");
 
-            await ageRatingRepo.DeleteAgeRatingAsync(existingAgeRating);
+            await ageRatingRepo.DeleteDataAsync(existingAgeRating);
 
             return new Response(HttpStatusCode.OK, "AgeRating deleted successfully.");
         }
 
         public async Task<AgeRating?> GetAgeRatingById(int id)
         {
-            AgeRating? ageRating = await ageRatingRepo.GetAgeRatingByIdAsync(id);
+            AgeRating? ageRating = await ageRatingRepo.GetDataByIdAsync(id);
 
             return ageRating;
         }
 
         public async Task<List<AgeRating>> GetAgeRatingListByIds(List<int> ids)
         {
-            List<AgeRating> ageRatings = await ageRatingRepo.GetAgeRatingListByIdsAsync(ids);
+            List<AgeRating> ageRatings = await ageRatingRepo.GetDatasByIdsAsync(ids);
 
             return ageRatings;
         }

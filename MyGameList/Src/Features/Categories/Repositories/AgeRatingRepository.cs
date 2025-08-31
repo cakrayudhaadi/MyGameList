@@ -1,66 +1,22 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyGameList.Src.Features.Categories.Models;
+using MyGameList.Src.Features.Generic.Repositories;
 
 namespace MyGameList.Src.Features.Categories.Repositories
 {
-    public interface IAgeRatingRepository
+    public interface IAgeRatingRepository : IGenericRepository<AgeRating, int>
     {
-        Task<AgeRating> AddAsync(AgeRating ageRating);
-        Task<List<AgeRating>> GetAllAgeRatingsAsync();
-        Task<AgeRating?> GetAgeRatingByIdAsync(int id);
-        Task<AgeRating?> GetAgeRatingByRatingAsync(int? id, string rating);
-        Task UpdateAgeRatingAsync(AgeRating ageRating);
-        Task DeleteAgeRatingAsync(AgeRating ageRating);
-        Task<List<AgeRating>> GetAgeRatingListByIdsAsync(List<int> ids);
+        Task<AgeRating?> IsDataDuplicateAsync(int? id, AgeRating compare);
     }
 
-    public class AgeRatingRepository(MyGameListDbContext context) : IAgeRatingRepository
+    public class AgeRatingRepository(MyGameListDbContext context) : GenericRepository<AgeRating, int>(context), IAgeRatingRepository
     {
-        public async Task<AgeRating> AddAsync(AgeRating ageRating)
-        {
-            ArgumentNullException.ThrowIfNull(ageRating);
-            context.AgeRating.Add(ageRating);
-            await context.SaveChangesAsync();
-            return ageRating;
-        }
-
-        public async Task<List<AgeRating>> GetAllAgeRatingsAsync()
-        {
-            return await context.AgeRating.ToListAsync();
-        }
-
-        public async Task<AgeRating?> GetAgeRatingByIdAsync(int id)
-        {
-            return await context.AgeRating.FindAsync(id);
-        }
-
-        public async Task<AgeRating?> GetAgeRatingByRatingAsync(int? id, string rating)
+        public async Task<AgeRating?> IsDataDuplicateAsync(int? id, AgeRating compare)
         {
             if (id.HasValue)
-                return await context.AgeRating.FirstOrDefaultAsync(ageRating => ageRating.Id != id && ageRating.Rating == rating);
+                return await context.AgeRating.FirstOrDefaultAsync(ageRating => ageRating.Id != id && ageRating.Rating == compare.Rating);
             else
-                return await context.AgeRating.FirstOrDefaultAsync(ageRating => ageRating.Rating == rating);
-        }
-
-        public async Task UpdateAgeRatingAsync(AgeRating ageRating)
-        {
-            ArgumentNullException.ThrowIfNull(ageRating);
-            context.AgeRating.Update(ageRating);
-            await context.SaveChangesAsync();
-        }
-
-        public async Task DeleteAgeRatingAsync(AgeRating ageRating)
-        {
-            ArgumentNullException.ThrowIfNull(ageRating);
-            context.AgeRating.Remove(ageRating);
-            await context.SaveChangesAsync();
-        }
-
-        public async Task<List<AgeRating>> GetAgeRatingListByIdsAsync(List<int> ids)
-        {
-            return await context.AgeRating
-                .Where(ageRating => ids.Contains(ageRating.Id))
-                .ToListAsync();
+                return await context.AgeRating.FirstOrDefaultAsync(ageRating => ageRating.Rating == compare.Rating);
         }
     }
 }

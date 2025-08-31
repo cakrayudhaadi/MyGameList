@@ -21,7 +21,7 @@ namespace MyGameList.Src.Features.Categories.Dtos
             gender ??= new Gender();
             DateTime timeNow = DateTime.UtcNow;
 
-            gender.Option = Gender is not null ? Gender : gender.Option;
+            gender.Option = !string.IsNullOrEmpty(Gender) ? Gender : gender.Option;
             if (!id.HasValue)
             {
                 gender.CreatedAt = timeNow;

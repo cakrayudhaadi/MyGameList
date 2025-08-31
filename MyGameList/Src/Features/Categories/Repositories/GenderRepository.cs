@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyGameList.Src.Features.Categories.Models;
-using System.Reflection;
 
 namespace MyGameList.Src.Features.Categories.Repositories
 {

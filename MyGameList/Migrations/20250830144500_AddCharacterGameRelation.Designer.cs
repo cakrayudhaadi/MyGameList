@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyGameList.Src.Features;
 
@@ -11,9 +12,11 @@ using MyGameList.Src.Features;
 namespace MyGameList.Migrations
 {
     [DbContext(typeof(MyGameListDbContext))]
-    partial class MyGameListDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250830144500_AddCharacterGameRelation")]
+    partial class AddCharacterGameRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,7 +52,7 @@ namespace MyGameList.Migrations
 
                     b.HasIndex("GamesId");
 
-                    b.ToTable("game_characters", (string)null);
+                    b.ToTable("CharacterGame");
                 });
 
             modelBuilder.Entity("DeveloperGame", b =>
