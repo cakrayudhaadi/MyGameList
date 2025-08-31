@@ -52,8 +52,6 @@ namespace MyGameList.Src.Features.GameMakers.Dtos
         {
             if (string.IsNullOrEmpty(Name))
                 return "Name is required";
-            if (!GenderId.HasValue)
-                return "GenderId is required";
 
             return null;
         }

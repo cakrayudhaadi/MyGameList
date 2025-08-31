@@ -7,8 +7,11 @@ namespace MyGameList.Src.Features.Characters
     {
         public static IServiceCollection AddCharacterServices(this IServiceCollection services)
         {
+            services.AddScoped<ICharacterRepository, CharacterRepository>();
+            services.AddScoped<ICharacterService, CharacterService>();
             services.AddScoped<ICharacterRoleRepository, CharacterRoleRepository>();
             services.AddScoped<ICharacterRoleService, CharacterRoleService>();
+            services.AddScoped<IGameCharacterService, GameCharacterService>();
 
             return services;
         }

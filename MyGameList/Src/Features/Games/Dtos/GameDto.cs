@@ -27,6 +27,7 @@ namespace MyGameList.Src.Features.Games.Dtos
         public List<int> GenreIds { get; set; } = [];
         public List<int> ModeIds { get; set; } = [];
         public List<int> PlatformIds { get; set; } = [];
+        public List<int> CharacterIds { get; set; } = [];
 
         public Game GameDtoToModel(Game? game, int? id)
         {
