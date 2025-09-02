@@ -28,7 +28,7 @@ namespace MyGameList.Src.Features.Categories.Models
 
         [Column("id")]
         [Key]
-        public int Id { get; set; }
+        public new int Id { get; set; }
         [Column("rating")]
         [Required]
         public string Rating { get; set; }

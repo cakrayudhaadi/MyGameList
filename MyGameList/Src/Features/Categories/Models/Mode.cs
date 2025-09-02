@@ -25,7 +25,7 @@ namespace MyGameList.Src.Features.Categories.Models
 
         [Column("id")]
         [Key]
-        public int Id { get; set; }
+        public new int Id { get; set; }
         [Column("option")]
         [Required]
         public string Option { get; set; }

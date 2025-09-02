@@ -28,7 +28,7 @@ namespace MyGameList.Src.Features.Characters.Models
 
         [Column("id")]
         [Key]
-        public int Id { get; set; }
+        public new int Id { get; set; }
         [Column("name")]
         [Required]
         public string Name { get; set; }

@@ -11,7 +11,7 @@ namespace MyGameList.Src.Features.Games.Repositories
 
     public class GameRepository(MyGameListDbContext context) : GenericRepository<Game, int>(context), IGameRepository
     {
-        public async Task<List<Game>> GetAllDatasAsync()
+        public override async Task<List<Game>> GetAllDatasAsync()
         {
             return await context.Game
                 .Include(game => game.AgeRatings)
@@ -24,7 +24,7 @@ namespace MyGameList.Src.Features.Games.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Game?> GetDataByIdAsync(int id)
+        public override async Task<Game?> GetDataByIdAsync(int id)
         {
             return await context.Game
                 .Include(game => game.AgeRatings)

@@ -27,7 +27,7 @@ namespace MyGameList.Src.Features.Games.Models
         }
 
         [Column("id")]
-        public int Id { get; set; }
+        public new int Id { get; set; }
         [Column("title")]
         [Required]
         public string Title { get; set; }

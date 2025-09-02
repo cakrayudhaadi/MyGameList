@@ -22,7 +22,7 @@ namespace MyGameList.Src.Features.Characters.Models
         }
 
         [Column("id")]
-        public int Id { get; set; }
+        public new int Id { get; set; }
         [Column("role")]
         public string Role { get; set; }
         [Column("description")]
