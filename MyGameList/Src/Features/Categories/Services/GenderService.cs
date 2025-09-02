@@ -26,11 +26,11 @@ namespace MyGameList.Src.Features.Categories.Services
             if (errValidation is not null)
                 return new Response<GenderResponseDto>(HttpStatusCode.BadRequest, errValidation, null);
 
-            Gender? duplicate = await genderRepo.GetGenderByOptionAsync(null, genderDto.Gender);
+            Gender gender = genderDto.GenderDtoToModel(null, null);
+            Gender? duplicate = await genderRepo.IsDataDuplicateAsync(null, gender);
             if (duplicate is not null)
                 return new Response<GenderResponseDto>(HttpStatusCode.BadRequest, "Gender must be unique.", null);
 
-            Gender gender = genderDto.GenderDtoToModel(null, null);
             Gender newGender = await genderRepo.AddAsync(gender);
             GenderResponseDto genderResponseDto = GenderResponseDto.GenderModelToResponseDto(newGender);
 
@@ -39,7 +39,7 @@ namespace MyGameList.Src.Features.Categories.Services
 
         public async Task<Response<List<GenderResponseDto>>> GetAllGendersAsync()
         {
-            List<Gender> genders = await genderRepo.GetAllGendersAsync();
+            List<Gender> genders = await genderRepo.GetAllDatasAsync();
             List<GenderResponseDto> genderResponseDtos = [.. genders.Select(gender => GenderResponseDto.GenderModelToResponseDto(gender))];
 
             return new Response<List<GenderResponseDto>>(HttpStatusCode.OK, HttpStatusCode.OK.ToString(), genderResponseDtos);
@@ -47,7 +47,7 @@ namespace MyGameList.Src.Features.Categories.Services
 
         public async Task<Response<GenderResponseDto>> GetGenderByIdAsync(int id)
         {
-            Gender? gender = await genderRepo.GetGenderByIdAsync(id);
+            Gender? gender = await genderRepo.GetDataByIdAsync(id);
             if (gender is null)
                 return new Response<GenderResponseDto>(HttpStatusCode.NotFound, "Gender not found.", null);
 
@@ -58,34 +58,34 @@ namespace MyGameList.Src.Features.Categories.Services
 
         public async Task<Response> UpdateGenderAsync(int id, GenderDto genderDto)
         {
-            Gender? existingGender = await genderRepo.GetGenderByIdAsync(id);
+            Gender? existingGender = await genderRepo.GetDataByIdAsync(id);
             if (existingGender is null)
                 return new Response(HttpStatusCode.NotFound, "Gender not found.");
 
-            Gender? duplicate = await genderRepo.GetGenderByOptionAsync(id, genderDto.Gender);
+            Gender updatedGender = genderDto.GenderDtoToModel(existingGender, id);
+            Gender? duplicate = await genderRepo.IsDataDuplicateAsync(id, updatedGender);
             if (duplicate is not null)
                 return new Response(HttpStatusCode.BadRequest, "Gender must be unique.");
 
-            Gender updatedGender = genderDto.GenderDtoToModel(existingGender, id);
-            await genderRepo.UpdateGenderAsync(updatedGender);
+            await genderRepo.UpdateDataAsync(updatedGender);
 
             return new Response(HttpStatusCode.OK, "Gender updated successfully.");
         }
 
         public async Task<Response> DeleteGenderAsync(int id)
         {
-            Gender? existingGender = await genderRepo.GetGenderByIdAsync(id);
+            Gender? existingGender = await genderRepo.GetDataByIdAsync(id);
             if (existingGender is null)
                 return new Response(HttpStatusCode.NotFound, "Gender not found.");
 
-            await genderRepo.DeleteGenderAsync(existingGender);
+            await genderRepo.DeleteDataAsync(existingGender);
 
             return new Response(HttpStatusCode.OK, "Gender deleted successfully.");
         }
 
         public async Task<Gender?> GetGenderById(int id)
         {
-            Gender? gender = await genderRepo.GetGenderByIdAsync(id);
+            Gender? gender = await genderRepo.GetDataByIdAsync(id);
             
             return gender;
         }

@@ -21,10 +21,8 @@ namespace MyGameList.Src.Features.Characters.Services
         ICharacterRoleService characterRoleService,
         IGameCharacterService gameCharacterService) : ICharacterService
     {
-        public async Task AddOrUpdateCharacterFromDto(CharacterDto characterDto, Character? existingCharacter, int? id)
+        public async Task AddOrUpdateCharacterFromDto(Character character, CharacterDto characterDto, int? id)
         {
-            Character character = characterDto.CharacterDtoToModel(existingCharacter, id);
-
             await Util.AddCollectionProperties(character.Games, characterDto.GameIds, gameCharacterService.GetGameListByIds);
 
             if (!id.HasValue)
@@ -33,7 +31,7 @@ namespace MyGameList.Src.Features.Characters.Services
             }
             else
             {
-                await characterRepo.UpdateCharacterAsync(character);
+                await characterRepo.UpdateDataAsync(character);
             }
         }
 
@@ -45,6 +43,7 @@ namespace MyGameList.Src.Features.Characters.Services
             if (errValidation is not null)
                 return new Response(HttpStatusCode.BadRequest, errValidation);
 
+            Character character = characterDto.CharacterDtoToModel(null, null);
             if (characterDto.CharacterRoleId.HasValue)
             {
                 CharacterRole? characterRole = await characterRoleService.GetCharacterRoleById(characterDto.CharacterRoleId.Value);
@@ -52,14 +51,14 @@ namespace MyGameList.Src.Features.Characters.Services
                     return new Response(HttpStatusCode.BadRequest, "Character Role not found.");
             }
 
-            await AddOrUpdateCharacterFromDto(characterDto, null, null);
+            await AddOrUpdateCharacterFromDto(character, characterDto, null);
 
             return new Response(HttpStatusCode.OK, "Character created successfully.");
         }
 
         public async Task<Response<List<CharacterCoverResponseDto>>> GetAllCharactersAsync()
         {
-            List<Character> characters = await characterRepo.GetAllCharactersAsync();
+            List<Character> characters = await characterRepo.GetAllDatasAsync();
             List<CharacterCoverResponseDto> characterResponseDtos = [.. characters.Select(character => CharacterCoverResponseDto.CharacterModelToCoverResponseDto(character))];
 
             return new Response<List<CharacterCoverResponseDto>>(HttpStatusCode.OK, HttpStatusCode.OK.ToString(), characterResponseDtos);
@@ -67,7 +66,7 @@ namespace MyGameList.Src.Features.Characters.Services
 
         public async Task<Response<CharacterResponseDto>> GetCharacterByIdAsync(int id)
         {
-            Character? character = await characterRepo.GetCharacterByIdAsync(id);
+            Character? character = await characterRepo.GetDataByIdAsync(id);
             if (character is null)
                 return new Response<CharacterResponseDto>(HttpStatusCode.NotFound, "Character not found.", null);
 
@@ -78,10 +77,11 @@ namespace MyGameList.Src.Features.Characters.Services
 
         public async Task<Response> UpdateCharacterAsync(int id, CharacterDto characterDto)
         {
-            Character? existingCharacter = await characterRepo.GetCharacterByIdAsync(id);
+            Character? existingCharacter = await characterRepo.GetDataByIdAsync(id);
             if (existingCharacter is null)
                 return new Response(HttpStatusCode.NotFound, "Character not found.");
 
+            Character character = characterDto.CharacterDtoToModel(existingCharacter, id);
             if (characterDto.CharacterRoleId.HasValue)
             {
                 CharacterRole? characterRole = await characterRoleService.GetCharacterRoleById(characterDto.CharacterRoleId.Value);
@@ -89,18 +89,18 @@ namespace MyGameList.Src.Features.Characters.Services
                     return new Response(HttpStatusCode.BadRequest, "Character Role not found.");
             }
 
-            await AddOrUpdateCharacterFromDto(characterDto, existingCharacter, id);
+            await AddOrUpdateCharacterFromDto(character, characterDto, id);
 
             return new Response(HttpStatusCode.OK, "Character updated successfully.");
         }
 
         public async Task<Response> DeleteCharacterAsync(int id)
         {
-            Character? existingCharacter = await characterRepo.GetCharacterByIdAsync(id);
+            Character? existingCharacter = await characterRepo.GetDataByIdAsync(id);
             if (existingCharacter is null)
                 return new Response(HttpStatusCode.NotFound, "Character not found.");
 
-            await characterRepo.DeleteCharacterAsync(existingCharacter);
+            await characterRepo.DeleteDataAsync(existingCharacter);
 
             return new Response(HttpStatusCode.OK, "Character deleted successfully.");
         }

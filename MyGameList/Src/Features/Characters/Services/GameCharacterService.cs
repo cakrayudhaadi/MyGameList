@@ -16,14 +16,14 @@ namespace MyGameList.Src.Features.Characters.Services
     {
         public async Task<List<Game>> GetGameListByIds(List<int> ids)
         {
-            List<Game> games = await gameRepo.GetGameListByIdsAsync(ids);
+            List<Game> games = await gameRepo.GetDatasByIdsAsync(ids);
 
             return games;
         }
 
         public async Task<List<Character>> GetCharacterListByIds(List<int> ids)
         {
-            List<Character> characters = await characterRepo.GetCharacterListByIdsAsync(ids);
+            List<Character> characters = await characterRepo.GetDatasByIdsAsync(ids);
 
             return characters;
         }

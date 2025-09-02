@@ -47,7 +47,7 @@ namespace MyGameList.Src.Features.GameMakers.Services
 
         public async Task<Response<List<PersonResponseDto>>> GetAllPersonsAsync()
         {
-            List<Person> people = await personRepo.GetAllPersonsAsync();
+            List<Person> people = await personRepo.GetAllDatasAsync();
             List<PersonResponseDto> personResponseDtos = [.. people.Select(person => PersonResponseDto.PersonModelToResponseDto(person))];
 
             return new Response<List<PersonResponseDto>>(HttpStatusCode.OK, HttpStatusCode.OK.ToString(), personResponseDtos);
@@ -55,7 +55,7 @@ namespace MyGameList.Src.Features.GameMakers.Services
 
         public async Task<Response<PersonResponseDto>> GetPersonByIdAsync(int id)
         {
-            Person? person = await personRepo.GetPersonByIdAsync(id);
+            Person? person = await personRepo.GetDataByIdAsync(id);
             if (person is null)
                 return new Response<PersonResponseDto>(HttpStatusCode.NotFound, "Person not found.", null);
 
@@ -66,7 +66,7 @@ namespace MyGameList.Src.Features.GameMakers.Services
 
         public async Task<Response> UpdatePersonAsync(int id, PersonDto personDto)
         {
-            Person? existingPerson = await personRepo.GetPersonByIdAsync(id);
+            Person? existingPerson = await personRepo.GetDataByIdAsync(id);
             if (existingPerson is null)
                 return new Response(HttpStatusCode.NotFound, "Person not found.");
 
@@ -78,25 +78,25 @@ namespace MyGameList.Src.Features.GameMakers.Services
             }
 
             Person updatedPerson = personDto.PersonDtoToModel(existingPerson, id);
-            await personRepo.UpdatePersonAsync(updatedPerson);
+            await personRepo.UpdateDataAsync(updatedPerson);
 
             return new Response(HttpStatusCode.OK, "Person updated successfully.");
         }
 
         public async Task<Response> DeletePersonAsync(int id)
         {
-            Person? existingPerson = await personRepo.GetPersonByIdAsync(id);
+            Person? existingPerson = await personRepo.GetDataByIdAsync(id);
             if (existingPerson is null)
                 return new Response(HttpStatusCode.NotFound, "Person not found.");
 
-            await personRepo.DeletePersonAsync(existingPerson);
+            await personRepo.DeleteDataAsync(existingPerson);
 
             return new Response(HttpStatusCode.OK, "Person deleted successfully.");
         }
 
         public async Task<List<Person>> GetPersonListByIds(List<int> ids)
         {
-            List<Person> people = await personRepo.GetPersonListByIdsAsync(ids);
+            List<Person> people = await personRepo.GetDatasByIdsAsync(ids);
 
             return people;
         }

@@ -26,11 +26,11 @@ namespace MyGameList.Src.Features.GameMakers.Services
             if (errValidation is not null)
                 return new Response<DeveloperResponseDto>(HttpStatusCode.BadRequest, errValidation, null);
 
-            Developer? duplicate = await developerRepo.GetDeveloperByNameAsync(null, developerDto.Name);
+            Developer developer = developerDto.DeveloperDtoToModel(null, null);
+            Developer? duplicate = await developerRepo.IsDataDuplicateAsync(null, developer);
             if (duplicate is not null)
                 return new Response<DeveloperResponseDto>(HttpStatusCode.BadRequest, "Developer Name must be unique.", null);
 
-            Developer developer = developerDto.DeveloperDtoToModel(null, null);
             Developer newDeveloper = await developerRepo.AddAsync(developer);
             DeveloperResponseDto developerResponseDto = DeveloperResponseDto.DeveloperModelToResponseDto(newDeveloper);
 
@@ -39,7 +39,7 @@ namespace MyGameList.Src.Features.GameMakers.Services
 
         public async Task<Response<List<DeveloperResponseDto>>> GetAllDevelopersAsync()
         {
-            List<Developer> developers = await developerRepo.GetAllDevelopersAsync();
+            List<Developer> developers = await developerRepo.GetAllDatasAsync();
             List<DeveloperResponseDto> developerResponseDtos = [.. developers.Select(developer => DeveloperResponseDto.DeveloperModelToResponseDto(developer))];
 
             return new Response<List<DeveloperResponseDto>>(HttpStatusCode.OK, HttpStatusCode.OK.ToString(), developerResponseDtos);
@@ -47,7 +47,7 @@ namespace MyGameList.Src.Features.GameMakers.Services
 
         public async Task<Response<DeveloperResponseDto>> GetDeveloperByIdAsync(int id)
         {
-            Developer? developer = await developerRepo.GetDeveloperByIdAsync(id);
+            Developer? developer = await developerRepo.GetDataByIdAsync(id);
             if (developer is null)
                 return new Response<DeveloperResponseDto>(HttpStatusCode.NotFound, "Developer not found.", null);
 
@@ -58,34 +58,34 @@ namespace MyGameList.Src.Features.GameMakers.Services
 
         public async Task<Response> UpdateDeveloperAsync(int id, DeveloperDto developerDto)
         {
-            Developer? existingDeveloper = await developerRepo.GetDeveloperByIdAsync(id);
+            Developer? existingDeveloper = await developerRepo.GetDataByIdAsync(id);
             if (existingDeveloper is null)
                 return new Response(HttpStatusCode.NotFound, "Developer not found.");
 
-            Developer? duplicate = await developerRepo.GetDeveloperByNameAsync(id, developerDto.Name);
+            Developer updatedDeveloper = developerDto.DeveloperDtoToModel(existingDeveloper, id);
+            Developer? duplicate = await developerRepo.IsDataDuplicateAsync(id, updatedDeveloper);
             if (duplicate is not null)
                 return new Response(HttpStatusCode.BadRequest, "Developer Name must be unique.");
 
-            Developer updatedDeveloper = developerDto.DeveloperDtoToModel(existingDeveloper, id);
-            await developerRepo.UpdateDeveloperAsync(updatedDeveloper);
+            await developerRepo.UpdateDataAsync(updatedDeveloper);
 
             return new Response(HttpStatusCode.OK, "Developer updated successfully.");
         }
 
         public async Task<Response> DeleteDeveloperAsync(int id)
         {
-            Developer? existingDeveloper = await developerRepo.GetDeveloperByIdAsync(id);
+            Developer? existingDeveloper = await developerRepo.GetDataByIdAsync(id);
             if (existingDeveloper is null)
                 return new Response(HttpStatusCode.NotFound, "Developer not found.");
 
-            await developerRepo.DeleteDeveloperAsync(existingDeveloper);
+            await developerRepo.DeleteDataAsync(existingDeveloper);
 
             return new Response(HttpStatusCode.OK, "Developer deleted successfully.");
         }
 
         public async Task<List<Developer>> GetDeveloperListByIds(List<int> ids)
         {
-            List<Developer> developers = await developerRepo.GetDeveloperListByIdsAsync(ids);
+            List<Developer> developers = await developerRepo.GetDatasByIdsAsync(ids);
 
             return developers;
         }

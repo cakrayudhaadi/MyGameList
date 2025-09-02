@@ -26,11 +26,11 @@ namespace MyGameList.Src.Features.Categories.Services
             if (errValidation is not null)
                 return new Response<ModeResponseDto>(HttpStatusCode.BadRequest, errValidation, null);
 
-            Mode? duplicate = await modeRepo.GetModeByOptionAsync(null, modeDto.Mode);
+            Mode mode = modeDto.ModeDtoToModel(null, null);
+            Mode? duplicate = await modeRepo.IsDataDuplicateAsync(null, mode);
             if (duplicate is not null)
                 return new Response<ModeResponseDto>(HttpStatusCode.BadRequest, "Mode must be unique.", null);
 
-            Mode mode = modeDto.ModeDtoToModel(null, null);
             Mode newMode = await modeRepo.AddAsync(mode);
             ModeResponseDto modeResponseDto = ModeResponseDto.ModeModelToResponseDto(newMode);
 
@@ -39,7 +39,7 @@ namespace MyGameList.Src.Features.Categories.Services
 
         public async Task<Response<List<ModeResponseDto>>> GetAllModesAsync()
         {
-            List<Mode> modes = await modeRepo.GetAllModesAsync();
+            List<Mode> modes = await modeRepo.GetAllDatasAsync();
             List<ModeResponseDto> modeResponseDtos = [.. modes.Select(mode => ModeResponseDto.ModeModelToResponseDto(mode))];
 
             return new Response<List<ModeResponseDto>>(HttpStatusCode.OK, HttpStatusCode.OK.ToString(), modeResponseDtos);
@@ -47,7 +47,7 @@ namespace MyGameList.Src.Features.Categories.Services
 
         public async Task<Response<ModeResponseDto>> GetModeByIdAsync(int id)
         {
-            Mode? mode = await modeRepo.GetModeByIdAsync(id);
+            Mode? mode = await modeRepo.GetDataByIdAsync(id);
             if (mode is null)
                 return new Response<ModeResponseDto>(HttpStatusCode.NotFound, "Mode not found.", null);
 
@@ -58,34 +58,34 @@ namespace MyGameList.Src.Features.Categories.Services
 
         public async Task<Response> UpdateModeAsync(int id, ModeDto modeDto)
         {
-            Mode? existingMode = await modeRepo.GetModeByIdAsync(id);
+            Mode? existingMode = await modeRepo.GetDataByIdAsync(id);
             if (existingMode is null)
                 return new Response(HttpStatusCode.NotFound, "Mode not found.");
 
-            Mode? duplicate = await modeRepo.GetModeByOptionAsync(id, modeDto.Mode);
+            Mode updatedMode = modeDto.ModeDtoToModel(existingMode, id);
+            Mode? duplicate = await modeRepo.IsDataDuplicateAsync(id, updatedMode);
             if (duplicate is not null)
                 return new Response(HttpStatusCode.BadRequest, "Mode must be unique.");
 
-            Mode updatedMode = modeDto.ModeDtoToModel(existingMode, id);
-            await modeRepo.UpdateModeAsync(updatedMode);
+            await modeRepo.UpdateDataAsync(updatedMode);
 
             return new Response(HttpStatusCode.OK, "Mode updated successfully.");
         }
 
         public async Task<Response> DeleteModeAsync(int id)
         {
-            Mode? existingMode = await modeRepo.GetModeByIdAsync(id);
+            Mode? existingMode = await modeRepo.GetDataByIdAsync(id);
             if (existingMode is null)
                 return new Response(HttpStatusCode.NotFound, "Mode not found.");
 
-            await modeRepo.DeleteModeAsync(existingMode);
+            await modeRepo.DeleteDataAsync(existingMode);
 
             return new Response(HttpStatusCode.OK, "Mode deleted successfully.");
         }
 
         public async Task<List<Mode>> GetModeListByIds(List<int> ids)
         {
-            List<Mode> modes = await modeRepo.GetModeListByIdsAsync(ids);
+            List<Mode> modes = await modeRepo.GetDatasByIdsAsync(ids);
 
             return modes;
         }

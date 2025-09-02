@@ -29,10 +29,8 @@ namespace MyGameList.Src.Features.Games.Services
         IPlatformService platformService,
         IGameCharacterService gameCharacterService) : IGameService
     {
-        public async Task AddOrUpdateGameFromDto(GameDto gameDto, Game? existingGame, int? id)
+        public async Task AddOrUpdateGameFromDto(Game game, GameDto gameDto, int? id)
         {
-            Game game = gameDto.GameDtoToModel(existingGame, id);
-
             await Util.AddCollectionProperties(game.AgeRatings, gameDto.AgeRatingIds, ageRatingService.GetAgeRatingListByIds);
             await Util.AddCollectionProperties(game.Developers, gameDto.DeveloperIds, developerService.GetDeveloperListByIds);
             await Util.AddCollectionProperties(game.Publishers, gameDto.PublisherIds, publisherService.GetPublisherListByIds);
@@ -48,7 +46,7 @@ namespace MyGameList.Src.Features.Games.Services
             }
             else
             {
-                await gameRepo.UpdateGameAsync(game);
+                await gameRepo.UpdateDataAsync(game);
             }
         }
 
@@ -60,18 +58,19 @@ namespace MyGameList.Src.Features.Games.Services
             if (errValidation is not null)
                 return new Response(HttpStatusCode.BadRequest, errValidation);
 
-            Game? duplicate = await gameRepo.GetGameByTitleAsync(null, gameDto.Title);
+            Game game = gameDto.GameDtoToModel(null, null);
+            Game? duplicate = await gameRepo.IsDataDuplicateAsync(null, game);
             if (duplicate is not null)
                 return new Response(HttpStatusCode.BadRequest, "Game Title must be unique.");
 
-            await AddOrUpdateGameFromDto(gameDto, null, null);
+            await AddOrUpdateGameFromDto(game, gameDto, null);
 
             return new Response(HttpStatusCode.OK, "Game created successfully.");
         }
 
         public async Task<Response<List<GameCoverResponseDto>>> GetAllGamesAsync()
         {
-            List<Game> games = await gameRepo.GetAllGamesAsync();
+            List<Game> games = await gameRepo.GetAllDatasAsync();
             List<GameCoverResponseDto> gameResponseDtos = [.. games.Select(game => GameCoverResponseDto.GameModelToCoverResponseDto(game))];
 
             return new Response<List<GameCoverResponseDto>>(HttpStatusCode.OK, HttpStatusCode.OK.ToString(), gameResponseDtos);
@@ -79,7 +78,7 @@ namespace MyGameList.Src.Features.Games.Services
 
         public async Task<Response<GameResponseDto>> GetGameByIdAsync(int id)
         {
-            Game? game = await gameRepo.GetGameByIdAsync(id);
+            Game? game = await gameRepo.GetDataByIdAsync(id);
             if (game is null)
                 return new Response<GameResponseDto>(HttpStatusCode.NotFound, "Game not found.", null);
 
@@ -90,26 +89,27 @@ namespace MyGameList.Src.Features.Games.Services
 
         public async Task<Response> UpdateGameAsync(int id, GameDto gameDto)
         {
-            Game? existingGame = await gameRepo.GetGameByIdAsync(id);
+            Game? existingGame = await gameRepo.GetDataByIdAsync(id);
             if (existingGame is null)
                 return new Response(HttpStatusCode.NotFound, "Game not found.");
 
-            Game? duplicate = await gameRepo.GetGameByTitleAsync(id, gameDto.Title);
+            Game game = gameDto.GameDtoToModel(existingGame, id);
+            Game? duplicate = await gameRepo.IsDataDuplicateAsync(id, game);
             if (duplicate is not null)
                 return new Response(HttpStatusCode.BadRequest, "Game Title must be unique.");
 
-            await AddOrUpdateGameFromDto(gameDto, existingGame, id);
+            await AddOrUpdateGameFromDto(game, gameDto, id);
 
             return new Response(HttpStatusCode.OK, "Game updated successfully.");
         }
 
         public async Task<Response> DeleteGameAsync(int id)
         {
-            Game? existingGame = await gameRepo.GetGameByIdAsync(id);
+            Game? existingGame = await gameRepo.GetDataByIdAsync(id);
             if (existingGame is null)
                 return new Response(HttpStatusCode.NotFound, "Game not found.");
 
-            await gameRepo.DeleteGameAsync(existingGame);
+            await gameRepo.DeleteDataAsync(existingGame);
 
             return new Response(HttpStatusCode.OK, "Game deleted successfully.");
         }

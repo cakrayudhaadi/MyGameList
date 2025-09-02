@@ -1,66 +1,22 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyGameList.Src.Features.GameMakers.Models;
+using MyGameList.Src.Features.Generic.Repositories;
 
 namespace MyGameList.Src.Features.GameMakers.Repositories
 {
-    public interface IPublisherRepository
+    public interface IPublisherRepository : IGenericRepository<Publisher, int>
     {
-        Task<Publisher> AddAsync(Publisher publisher);
-        Task<List<Publisher>> GetAllPublishersAsync();
-        Task<Publisher?> GetPublisherByIdAsync(int id);
-        Task<Publisher?> GetPublisherByNameAsync(int? id, string name);
-        Task UpdatePublisherAsync(Publisher publisher);
-        Task DeletePublisherAsync(Publisher publisher);
-        Task<List<Publisher>> GetPublisherListByIdsAsync(List<int> ids);
+        Task<Publisher?> IsDataDuplicateAsync(int? id, Publisher compare);
     }
 
-    public class PublisherRepository(MyGameListDbContext context) : IPublisherRepository
+    public class PublisherRepository(MyGameListDbContext context) : GenericRepository<Publisher, int>(context), IPublisherRepository
     {
-        public async Task<Publisher> AddAsync(Publisher publisher)
-        {
-            ArgumentNullException.ThrowIfNull(publisher);
-            context.Publisher.Add(publisher);
-            await context.SaveChangesAsync();
-            return publisher;
-        }
-
-        public async Task<List<Publisher>> GetAllPublishersAsync()
-        {
-            return await context.Publisher.ToListAsync();
-        }
-
-        public async Task<Publisher?> GetPublisherByIdAsync(int id)
-        {
-            return await context.Publisher.FindAsync(id);
-        }
-
-        public async Task<Publisher?> GetPublisherByNameAsync(int? id, string name)
+        public async Task<Publisher?> IsDataDuplicateAsync(int? id, Publisher compare)
         {
             if (id.HasValue)
-                return await context.Publisher.FirstOrDefaultAsync(publisher => publisher.Id != id && publisher.Name == name);
+                return await context.Publisher.FirstOrDefaultAsync(publisher => publisher.Id != id && publisher.Name == compare.Name);
             else
-                return await context.Publisher.FirstOrDefaultAsync(publisher => publisher.Name == name);
-        }
-
-        public async Task UpdatePublisherAsync(Publisher publisher)
-        {
-            ArgumentNullException.ThrowIfNull(publisher);
-            context.Publisher.Update(publisher);
-            await context.SaveChangesAsync();
-        }
-
-        public async Task DeletePublisherAsync(Publisher publisher)
-        {
-            ArgumentNullException.ThrowIfNull(publisher);
-            context.Publisher.Remove(publisher);
-            await context.SaveChangesAsync();
-        }
-
-        public async Task<List<Publisher>> GetPublisherListByIdsAsync(List<int> ids)
-        {
-            return await context.Publisher
-                .Where(publisher => ids.Contains(publisher.Id))
-                .ToListAsync();
+                return await context.Publisher.FirstOrDefaultAsync(publisher => publisher.Name == compare.Name);
         }
     }
 }
