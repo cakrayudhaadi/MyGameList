@@ -46,8 +46,10 @@ namespace MyGameList.Src.Features.Categories.Models
 
         protected override bool CustomEquals(object other)
         {
-            AgeRating otherAgeRating = (AgeRating)other;
-            return Rating == otherAgeRating.Rating;
+            AgeRating otherObj = (AgeRating)other;
+            return Rating == otherObj.Rating
+                && Description == otherObj.Description
+                && AgeMinimum == otherObj.AgeMinimum;
         }
 
         public override int GetHashCode()

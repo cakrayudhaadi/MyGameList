@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyGameList.Src.Features.Games.Models;
+using MyGameList.Src.Features.Generic.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -7,7 +8,7 @@ namespace MyGameList.Src.Features.Categories.Models
 {
     [Table("genres")]
     [Index(nameof(Option), IsUnique = true)]
-    public class Genre
+    public class Genre : GenericModel<int>
     {
         public Genre()
         {
@@ -34,5 +35,16 @@ namespace MyGameList.Src.Features.Categories.Models
         public DateTime? UpdatedAt { get; set; }
 
         public ICollection<Game> Games { get; set; } = [];
+
+        protected override bool CustomEquals(object other)
+        {
+            Genre otherObj = (Genre)other;
+            return Option == otherObj.Option;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Option);
+        }
     }
 }

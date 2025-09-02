@@ -1,11 +1,12 @@
 ﻿using MyGameList.Src.Features.Games.Models;
+using MyGameList.Src.Features.Generic.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyGameList.Src.Features.Characters.Models
 {
     [Table("character")]
-    public class Character
+    public class Character : GenericModel<int>
     {
         public Character()
         {
@@ -46,5 +47,20 @@ namespace MyGameList.Src.Features.Characters.Models
 
         public CharacterRole? CharacterRole { get; set; }
         public ICollection<Game> Games { get; set; } = [];
+
+        protected override bool CustomEquals(object other)
+        {
+            Character otherObj = (Character)other;
+            return Name == otherObj.Name
+                && Nickname == otherObj.Nickname
+                && Description == otherObj.Description
+                && CharacterRoleId == otherObj.CharacterRoleId
+                && YearRelease == otherObj.YearRelease;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Name, Description, CharacterRoleId, YearRelease);
+        }
     }
 }

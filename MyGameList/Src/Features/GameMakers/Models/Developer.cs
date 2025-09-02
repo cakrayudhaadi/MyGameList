@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyGameList.Src.Features.Games.Models;
+using MyGameList.Src.Features.Generic.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -7,7 +8,7 @@ namespace MyGameList.Src.Features.GameMakers.Models
 {
     [Table("developers")]
     [Index(nameof(Name), IsUnique = true)]
-    public class Developer
+    public class Developer : GenericModel<int>
     {
         public Developer()
         {
@@ -45,5 +46,19 @@ namespace MyGameList.Src.Features.GameMakers.Models
         public DateTime? UpdatedAt { get; set; }
 
         public ICollection<Game> Games { get; set; } = [];
+
+        protected override bool CustomEquals(object other)
+        {
+            Developer otherObj = (Developer)other;
+            return Name == otherObj.Name
+                && Description == otherObj.Description
+                && EstablishedIn == otherObj.EstablishedIn
+                && Website == otherObj.Website;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Name, Description, EstablishedIn, Website);
+        }
     }
 }
