@@ -26,11 +26,11 @@ namespace MyGameList.Src.Features.Categories.Services
             if (errValidation is not null)
                 return new Response<PlatformResponseDto>(HttpStatusCode.BadRequest, errValidation, null);
 
-            Platform? duplicate = await platformRepo.GetPlatformByOptionAsync(null, platformDto.Platform);
+            Platform platform = platformDto.PlatformDtoToModel(null, null);
+            Platform? duplicate = await platformRepo.IsDataDuplicateAsync(null, platform);
             if (duplicate is not null)
                 return new Response<PlatformResponseDto>(HttpStatusCode.BadRequest, "Platform must be unique.", null);
 
-            Platform platform = platformDto.PlatformDtoToModel(null, null);
             Platform newPlatform = await platformRepo.AddAsync(platform);
             PlatformResponseDto platformResponseDto = PlatformResponseDto.PlatformModelToResponseDto(newPlatform);
 
@@ -39,7 +39,7 @@ namespace MyGameList.Src.Features.Categories.Services
 
         public async Task<Response<List<PlatformResponseDto>>> GetAllPlatformsAsync()
         {
-            List<Platform> platforms = await platformRepo.GetAllPlatformsAsync();
+            List<Platform> platforms = await platformRepo.GetAllDatasAsync();
             List<PlatformResponseDto> platformResponseDtos = [.. platforms.Select(platform => PlatformResponseDto.PlatformModelToResponseDto(platform))];
 
             return new Response<List<PlatformResponseDto>>(HttpStatusCode.OK, HttpStatusCode.OK.ToString(), platformResponseDtos);
@@ -47,7 +47,7 @@ namespace MyGameList.Src.Features.Categories.Services
 
         public async Task<Response<PlatformResponseDto>> GetPlatformByIdAsync(int id)
         {
-            Platform? platform = await platformRepo.GetPlatformByIdAsync(id);
+            Platform? platform = await platformRepo.GetDataByIdAsync(id);
             if (platform is null)
                 return new Response<PlatformResponseDto>(HttpStatusCode.NotFound, "Platform not found.", null);
 
@@ -58,34 +58,34 @@ namespace MyGameList.Src.Features.Categories.Services
 
         public async Task<Response> UpdatePlatformAsync(int id, PlatformDto platformDto)
         {
-            Platform? existingPlatform = await platformRepo.GetPlatformByIdAsync(id);
+            Platform? existingPlatform = await platformRepo.GetDataByIdAsync(id);
             if (existingPlatform is null)
                 return new Response(HttpStatusCode.NotFound, "Platform not found.");
 
-            Platform? duplicate = await platformRepo.GetPlatformByOptionAsync(id, platformDto.Platform);
+            Platform updatedPlatform = platformDto.PlatformDtoToModel(existingPlatform, id);
+            Platform? duplicate = await platformRepo.IsDataDuplicateAsync(id, updatedPlatform);
             if (duplicate is not null)
                 return new Response(HttpStatusCode.BadRequest, "Platform must be unique.");
 
-            Platform updatedPlatform = platformDto.PlatformDtoToModel(existingPlatform, id);
-            await platformRepo.UpdatePlatformAsync(updatedPlatform);
+            await platformRepo.UpdateDataAsync(updatedPlatform);
 
             return new Response(HttpStatusCode.OK, "Platform updated successfully.");
         }
 
         public async Task<Response> DeletePlatformAsync(int id)
         {
-            Platform? existingPlatform = await platformRepo.GetPlatformByIdAsync(id);
+            Platform? existingPlatform = await platformRepo.GetDataByIdAsync(id);
             if (existingPlatform is null)
                 return new Response(HttpStatusCode.NotFound, "Platform not found.");
 
-            await platformRepo.DeletePlatformAsync(existingPlatform);
+            await platformRepo.DeleteDataAsync(existingPlatform);
 
             return new Response(HttpStatusCode.OK, "Platform deleted successfully.");
         }
 
         public async Task<List<Platform>> GetPlatformListByIds(List<int> ids)
         {
-            List<Platform> platforms = await platformRepo.GetPlatformListByIdsAsync(ids);
+            List<Platform> platforms = await platformRepo.GetDatasByIdsAsync(ids);
 
             return platforms;
         }

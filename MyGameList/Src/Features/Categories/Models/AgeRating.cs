@@ -28,7 +28,7 @@ namespace MyGameList.Src.Features.Categories.Models
 
         [Column("id")]
         [Key]
-        public int Id { get; set; }
+        public new int Id { get; set; }
         [Column("rating")]
         [Required]
         public string Rating { get; set; }
@@ -46,8 +46,10 @@ namespace MyGameList.Src.Features.Categories.Models
 
         protected override bool CustomEquals(object other)
         {
-            AgeRating otherAgeRating = (AgeRating)other;
-            return Rating == otherAgeRating.Rating;
+            AgeRating otherObj = (AgeRating)other;
+            return Rating == otherObj.Rating
+                && Description == otherObj.Description
+                && AgeMinimum == otherObj.AgeMinimum;
         }
 
         public override int GetHashCode()

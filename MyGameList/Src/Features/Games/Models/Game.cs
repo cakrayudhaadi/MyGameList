@@ -1,13 +1,16 @@
-﻿using MyGameList.Src.Features.Categories.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using MyGameList.Src.Features.Categories.Models;
 using MyGameList.Src.Features.Characters.Models;
 using MyGameList.Src.Features.GameMakers.Models;
+using MyGameList.Src.Features.Generic.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyGameList.Src.Features.Games.Models
 {
     [Table("games")]
-    public class Game
+    [Index(nameof(Title), IsUnique = true)]
+    public class Game : GenericModel<int>
     {
         public Game()
         {
@@ -24,7 +27,7 @@ namespace MyGameList.Src.Features.Games.Models
         }
 
         [Column("id")]
-        public int Id { get; set; }
+        public new int Id { get; set; }
         [Column("title")]
         [Required]
         public string Title { get; set; }
@@ -47,5 +50,19 @@ namespace MyGameList.Src.Features.Games.Models
         public ICollection<Mode> Modes { get; set; } = [];
         public ICollection<Platform> Platforms { get; set; } = [];
         public ICollection<Character> Characters { get; set; } = [];
+
+        protected override bool CustomEquals(object other)
+        {
+            Game otherObj = (Game)other;
+            return Title == otherObj.Title
+                && Description == otherObj.Description
+                && Plot == otherObj.Plot
+                && YearRelease == otherObj.YearRelease;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Title, Description, Plot, YearRelease);
+        }
     }
 }

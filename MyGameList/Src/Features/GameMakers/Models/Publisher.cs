@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyGameList.Src.Features.Games.Models;
+using MyGameList.Src.Features.Generic.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -7,7 +8,7 @@ namespace MyGameList.Src.Features.GameMakers.Models
 {
     [Table("publishers")]
     [Index(nameof(Name), IsUnique = true)]
-    public class Publisher
+    public class Publisher : GenericModel<int>
     {
         public Publisher()
         {
@@ -28,7 +29,7 @@ namespace MyGameList.Src.Features.GameMakers.Models
 
         [Column("id")]
         [Key]
-        public int Id { get; set; }
+        public new int Id { get; set; }
         [Column("name")]
         [Required]
         public string Name { get; set; }
@@ -45,5 +46,19 @@ namespace MyGameList.Src.Features.GameMakers.Models
         public DateTime? UpdatedAt { get; set; }
 
         public ICollection<Game> Games { get; set; } = [];
+
+        protected override bool CustomEquals(object other)
+        {
+            Publisher otherObj = (Publisher)other;
+            return Name == otherObj.Name
+                && Description == otherObj.Description
+                && EstablishedIn == otherObj.EstablishedIn
+                && Website == otherObj.Website;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Name, Description, EstablishedIn, Website);
+        }
     }
 }

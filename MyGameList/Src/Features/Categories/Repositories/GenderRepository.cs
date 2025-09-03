@@ -1,58 +1,22 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyGameList.Src.Features.Categories.Models;
+using MyGameList.Src.Features.Generic.Repositories;
 
 namespace MyGameList.Src.Features.Categories.Repositories
 {
-    public interface IGenderRepository
+    public interface IGenderRepository : IGenericRepository<Gender, int>
     {
-        Task<Gender> AddAsync(Gender gender);
-        Task<List<Gender>> GetAllGendersAsync();
-        Task<Gender?> GetGenderByIdAsync(int id);
-        Task<Gender?> GetGenderByOptionAsync(int? id, string option);
-        Task UpdateGenderAsync(Gender gender);
-        Task DeleteGenderAsync(Gender gender);
+        Task<Gender?> IsDataDuplicateAsync(int? id, Gender compare);
     }
 
-    public class GenderRepository(MyGameListDbContext context) : IGenderRepository
+    public class GenderRepository(MyGameListDbContext context) : GenericRepository<Gender, int>(context), IGenderRepository
     {
-        public async Task<Gender> AddAsync(Gender gender)
-        {
-            ArgumentNullException.ThrowIfNull(gender);
-            context.Gender.Add(gender);
-            await context.SaveChangesAsync();
-            return gender;
-        }
-
-        public async Task<List<Gender>> GetAllGendersAsync()
-        {
-            return await context.Gender.ToListAsync();
-        }
-
-        public async Task<Gender?> GetGenderByIdAsync(int id)
-        {
-            return await context.Gender.FindAsync(id);
-        }
-
-        public async Task<Gender?> GetGenderByOptionAsync(int? id, string option)
+        public async Task<Gender?> IsDataDuplicateAsync(int? id, Gender compare)
         {
             if (id.HasValue)
-                return await context.Gender.FirstOrDefaultAsync(gender => gender.Id != id && gender.Option == option);
+                return await context.Gender.FirstOrDefaultAsync(gender => gender.Id != id && gender.Option == compare.Option);
             else
-                return await context.Gender.FirstOrDefaultAsync(gender => gender.Option == option);
-        }
-
-        public async Task UpdateGenderAsync(Gender gender)
-        {
-            ArgumentNullException.ThrowIfNull(gender);
-            context.Gender.Update(gender);
-            await context.SaveChangesAsync();
-        }
-
-        public async Task DeleteGenderAsync(Gender gender)
-        {
-            ArgumentNullException.ThrowIfNull(gender);
-            context.Gender.Remove(gender);
-            await context.SaveChangesAsync();
+                return await context.Gender.FirstOrDefaultAsync(gender => gender.Option == compare.Option);
         }
     }
 }

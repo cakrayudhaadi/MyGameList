@@ -26,11 +26,11 @@ namespace MyGameList.Src.Features.Characters.Services
             if (errValidation is not null)
                 return new Response<CharacterRoleResponseDto>(HttpStatusCode.BadRequest, errValidation, null);
 
-            CharacterRole? duplicate = await characterRoleRepo.GetCharacterRoleByRoleAsync(null, characterRoleDto.Role);
+            CharacterRole characterRole = characterRoleDto.CharacterRoleDtoToModel(null, null);
+            CharacterRole? duplicate = await characterRoleRepo.IsDataDuplicateAsync(null, characterRole);
             if (duplicate is not null)
                 return new Response<CharacterRoleResponseDto>(HttpStatusCode.BadRequest, "Role must be unique.", null);
 
-            CharacterRole characterRole = characterRoleDto.CharacterRoleDtoToModel(null, null);
             CharacterRole newCharacterRole = await characterRoleRepo.AddAsync(characterRole);
             CharacterRoleResponseDto characterRoleResponseDto = CharacterRoleResponseDto.CharacterRoleModelToResponseDto(newCharacterRole);
 
@@ -39,7 +39,7 @@ namespace MyGameList.Src.Features.Characters.Services
 
         public async Task<Response<List<CharacterRoleResponseDto>>> GetAllCharacterRolesAsync()
         {
-            List<CharacterRole> characterRoles = await characterRoleRepo.GetAllCharacterRolesAsync();
+            List<CharacterRole> characterRoles = await characterRoleRepo.GetAllDatasAsync();
             List<CharacterRoleResponseDto> characterRoleResponseDtos = [.. characterRoles.Select(characterRole => CharacterRoleResponseDto.CharacterRoleModelToResponseDto(characterRole))];
 
             return new Response<List<CharacterRoleResponseDto>>(HttpStatusCode.OK, HttpStatusCode.OK.ToString(), characterRoleResponseDtos);
@@ -47,7 +47,7 @@ namespace MyGameList.Src.Features.Characters.Services
 
         public async Task<Response<CharacterRoleResponseDto>> GetCharacterRoleByIdAsync(int id)
         {
-            CharacterRole? characterRole = await characterRoleRepo.GetCharacterRoleByIdAsync(id);
+            CharacterRole? characterRole = await characterRoleRepo.GetDataByIdAsync(id);
             if (characterRole is null)
                 return new Response<CharacterRoleResponseDto>(HttpStatusCode.NotFound, "Character Role not found.", null);
 
@@ -58,34 +58,34 @@ namespace MyGameList.Src.Features.Characters.Services
 
         public async Task<Response> UpdateCharacterRoleAsync(int id, CharacterRoleDto characterRoleDto)
         {
-            CharacterRole? existingCharacterRole = await characterRoleRepo.GetCharacterRoleByIdAsync(id);
+            CharacterRole? existingCharacterRole = await characterRoleRepo.GetDataByIdAsync(id);
             if (existingCharacterRole is null)
                 return new Response(HttpStatusCode.NotFound, "Character Role not found.");
 
-            CharacterRole? duplicate = await characterRoleRepo.GetCharacterRoleByRoleAsync(id, characterRoleDto.Role);
+            CharacterRole updatedCharacterRole = characterRoleDto.CharacterRoleDtoToModel(existingCharacterRole, id);
+            CharacterRole? duplicate = await characterRoleRepo.IsDataDuplicateAsync(id, updatedCharacterRole);
             if (duplicate is not null)
                 return new Response(HttpStatusCode.BadRequest, "Role must be unique.");
 
-            CharacterRole updatedCharacterRole = characterRoleDto.CharacterRoleDtoToModel(existingCharacterRole, id);
-            await characterRoleRepo.UpdateCharacterRoleAsync(updatedCharacterRole);
+            await characterRoleRepo.UpdateDataAsync(updatedCharacterRole);
 
             return new Response(HttpStatusCode.OK, "Character Role updated successfully.");
         }
 
         public async Task<Response> DeleteCharacterRoleAsync(int id)
         {
-            CharacterRole? existingCharacterRole = await characterRoleRepo.GetCharacterRoleByIdAsync(id);
+            CharacterRole? existingCharacterRole = await characterRoleRepo.GetDataByIdAsync(id);
             if (existingCharacterRole is null)
                 return new Response(HttpStatusCode.NotFound, "Character Role not found.");
 
-            await characterRoleRepo.DeleteCharacterRoleAsync(existingCharacterRole);
+            await characterRoleRepo.DeleteDataAsync(existingCharacterRole);
 
             return new Response(HttpStatusCode.OK, "Character Role deleted successfully.");
         }
 
         public async Task<CharacterRole?> GetCharacterRoleById(int id)
         {
-            CharacterRole? characterRole = await characterRoleRepo.GetCharacterRoleByIdAsync(id);
+            CharacterRole? characterRole = await characterRoleRepo.GetDataByIdAsync(id);
 
             return characterRole;
         }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyGameList.Src.Features.GameMakers.Models;
+using MyGameList.Src.Features.Generic.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
@@ -8,7 +9,7 @@ namespace MyGameList.Src.Features.Categories.Models
 {
     [Table("genders")]
     [Index(nameof(Option), IsUnique = true)]
-    public class Gender
+    public class Gender : GenericModel<int>
     {
         public Gender()
         {
@@ -25,7 +26,7 @@ namespace MyGameList.Src.Features.Categories.Models
 
         [Column("id")]
         [Key]
-        public int Id { get; set; }
+        public new int Id { get; set; }
         [Column("option")]
         [Required]
         public string Option { get; set; }
@@ -36,5 +37,16 @@ namespace MyGameList.Src.Features.Categories.Models
         
         [JsonIgnore]
         public ICollection<Person>? Peoples { get; set; }
+
+        protected override bool CustomEquals(object other)
+        {
+            Gender otherObj = (Gender)other;
+            return Option == otherObj.Option;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Option);
+        }
     }
 }
