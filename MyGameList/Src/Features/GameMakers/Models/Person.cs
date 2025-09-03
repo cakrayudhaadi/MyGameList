@@ -1,12 +1,13 @@
 ﻿using MyGameList.Src.Features.Categories.Models;
 using MyGameList.Src.Features.Games.Models;
+using MyGameList.Src.Features.Generic.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyGameList.Src.Features.GameMakers.Models
 {
     [Table("people")]
-    public class Person
+    public class Person : GenericModel<int>
     {
         public Person()
         {
@@ -27,7 +28,7 @@ namespace MyGameList.Src.Features.GameMakers.Models
 
         [Column("id")]
         [Key]
-        public int Id { get; set; }
+        public new int Id { get; set; }
         [Column("name")]
         [Required]
         public string Name { get; set; }
@@ -44,5 +45,19 @@ namespace MyGameList.Src.Features.GameMakers.Models
 
         public Gender? Gender { get; set; }
         public ICollection<Game> Games { get; set; } = [];
+
+        protected override bool CustomEquals(object other)
+        {
+            Person otherObj = (Person)other;
+            return Name == otherObj.Name
+                && Bio == otherObj.Bio
+                && GenderId == otherObj.GenderId
+                && Birthday == otherObj.Birthday;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Name, Bio, GenderId, Birthday);
+        }
     }
 }

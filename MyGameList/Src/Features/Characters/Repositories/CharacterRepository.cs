@@ -1,31 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyGameList.Src.Features.Characters.Models;
-using MyGameList.Src.Features.Games.Models;
+using MyGameList.Src.Features.Generic.Repositories;
 
 namespace MyGameList.Src.Features.Characters.Repositories
 {
-    public interface ICharacterRepository
+    public interface ICharacterRepository : IGenericRepository<Character, int>
     {
-        Task<Character> AddAsync(Character character);
-        Task<List<Character>> GetAllCharactersAsync();
-        Task<Character?> GetCharacterByIdAsync(int id);
-        Task<Character?> GetCharacterByTitleAsync(int? id, string name);
-        Task UpdateCharacterAsync(Character character);
-        Task DeleteCharacterAsync(Character character);
-        Task<List<Character>> GetCharacterListByIdsAsync(List<int> ids);
+        Task<Character?> IsDataDuplicateAsync(int? id, Character compare);
     }
 
-    public class CharacterRepository(MyGameListDbContext context) : ICharacterRepository
+    public class CharacterRepository(MyGameListDbContext context) : GenericRepository<Character, int>(context), ICharacterRepository
     {
-        public async Task<Character> AddAsync(Character character)
-        {
-            ArgumentNullException.ThrowIfNull(character);
-            context.Character.Add(character);
-            await context.SaveChangesAsync();
-            return character;
-        }
-
-        public async Task<List<Character>> GetAllCharactersAsync()
+        public override async Task<List<Character>> GetAllDatasAsync()
         {
             return await context.Character
                 .Include(character => character.CharacterRole)
@@ -33,7 +19,7 @@ namespace MyGameList.Src.Features.Characters.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Character?> GetCharacterByIdAsync(int id)
+        public override async Task<Character?> GetDataByIdAsync(int id)
         {
             return await context.Character
                 .Include(character => character.CharacterRole)
@@ -41,33 +27,12 @@ namespace MyGameList.Src.Features.Characters.Repositories
                 .FirstOrDefaultAsync(character => character.Id == id);
         }
 
-        public async Task<Character?> GetCharacterByTitleAsync(int? id, string name)
+        public async Task<Character?> IsDataDuplicateAsync(int? id, Character compare)
         {
             if (id.HasValue)
-                return await context.Character.FirstOrDefaultAsync(character => character.Id != id && character.Name == name);
+                return await context.Character.FirstOrDefaultAsync(character => character.Id != id && character.Name == compare.Name);
             else
-                return await context.Character.FirstOrDefaultAsync(character => character.Name == name);
-        }
-
-        public async Task UpdateCharacterAsync(Character character)
-        {
-            ArgumentNullException.ThrowIfNull(character);
-            context.Character.Update(character);
-            await context.SaveChangesAsync();
-        }
-
-        public async Task DeleteCharacterAsync(Character character)
-        {
-            ArgumentNullException.ThrowIfNull(character);
-            context.Character.Remove(character);
-            await context.SaveChangesAsync();
-        }
-
-        public async Task<List<Character>> GetCharacterListByIdsAsync(List<int> ids)
-        {
-            return await context.Character
-                .Where(character => ids.Contains(character.Id))
-                .ToListAsync();
+                return await context.Character.FirstOrDefaultAsync(character => character.Name == compare.Name);
         }
     }
 }

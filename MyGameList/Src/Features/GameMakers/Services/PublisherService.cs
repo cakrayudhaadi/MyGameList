@@ -26,11 +26,11 @@ namespace MyGameList.Src.Features.GameMakers.Services
             if (errValidation is not null)
                 return new Response<PublisherResponseDto>(HttpStatusCode.BadRequest, errValidation, null);
 
-            Publisher? duplicate = await publisherRepo.GetPublisherByNameAsync(null, publisherDto.Name);
+            Publisher publisher = publisherDto.PublisherDtoToModel(null, null);
+            Publisher? duplicate = await publisherRepo.IsDataDuplicateAsync(null, publisher);
             if (duplicate is not null)
                 return new Response<PublisherResponseDto>(HttpStatusCode.BadRequest, "Publisher Name must be unique.", null);
 
-            Publisher publisher = publisherDto.PublisherDtoToModel(null, null);
             Publisher newPublisher = await publisherRepo.AddAsync(publisher);
             PublisherResponseDto publisherResponseDto = PublisherResponseDto.PublisherModelToResponseDto(newPublisher);
 
@@ -39,7 +39,7 @@ namespace MyGameList.Src.Features.GameMakers.Services
 
         public async Task<Response<List<PublisherResponseDto>>> GetAllPublishersAsync()
         {
-            List<Publisher> publishers = await publisherRepo.GetAllPublishersAsync();
+            List<Publisher> publishers = await publisherRepo.GetAllDatasAsync();
             List<PublisherResponseDto> publisherResponseDtos = [.. publishers.Select(publisher => PublisherResponseDto.PublisherModelToResponseDto(publisher))];
 
             return new Response<List<PublisherResponseDto>>(HttpStatusCode.OK, HttpStatusCode.OK.ToString(), publisherResponseDtos);
@@ -47,7 +47,7 @@ namespace MyGameList.Src.Features.GameMakers.Services
 
         public async Task<Response<PublisherResponseDto>> GetPublisherByIdAsync(int id)
         {
-            Publisher? publisher = await publisherRepo.GetPublisherByIdAsync(id);
+            Publisher? publisher = await publisherRepo.GetDataByIdAsync(id);
             if (publisher is null)
                 return new Response<PublisherResponseDto>(HttpStatusCode.NotFound, "Publisher not found.", null);
 
@@ -58,34 +58,34 @@ namespace MyGameList.Src.Features.GameMakers.Services
 
         public async Task<Response> UpdatePublisherAsync(int id, PublisherDto publisherDto)
         {
-            Publisher? existingPublisher = await publisherRepo.GetPublisherByIdAsync(id);
+            Publisher? existingPublisher = await publisherRepo.GetDataByIdAsync(id);
             if (existingPublisher is null)
                 return new Response(HttpStatusCode.NotFound, "Publisher not found.");
-
-            Publisher? duplicate = await publisherRepo.GetPublisherByNameAsync(id, publisherDto.Name);
+            
+            Publisher updatedPublisher = publisherDto.PublisherDtoToModel(existingPublisher, id);
+            Publisher? duplicate = await publisherRepo.IsDataDuplicateAsync(id, updatedPublisher);
             if (duplicate is not null)
                 return new Response(HttpStatusCode.BadRequest, "Publisher Name must be unique.");
 
-            Publisher updatedPublisher = publisherDto.PublisherDtoToModel(existingPublisher, id);
-            await publisherRepo.UpdatePublisherAsync(updatedPublisher);
+            await publisherRepo.UpdateDataAsync(updatedPublisher);
 
             return new Response(HttpStatusCode.OK, "Publisher updated successfully.");
         }
 
         public async Task<Response> DeletePublisherAsync(int id)
         {
-            Publisher? existingPublisher = await publisherRepo.GetPublisherByIdAsync(id);
+            Publisher? existingPublisher = await publisherRepo.GetDataByIdAsync(id);
             if (existingPublisher is null)
                 return new Response(HttpStatusCode.NotFound, "Publisher not found.");
 
-            await publisherRepo.DeletePublisherAsync(existingPublisher);
+            await publisherRepo.DeleteDataAsync(existingPublisher);
 
             return new Response(HttpStatusCode.OK, "Publisher deleted successfully.");
         }
 
         public async Task<List<Publisher>> GetPublisherListByIds(List<int> ids)
         {
-            List<Publisher> publishers = await publisherRepo.GetPublisherListByIdsAsync(ids);
+            List<Publisher> publishers = await publisherRepo.GetDatasByIdsAsync(ids);
 
             return publishers;
         }

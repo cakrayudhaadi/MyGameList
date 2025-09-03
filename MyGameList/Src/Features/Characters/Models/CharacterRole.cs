@@ -1,10 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using MyGameList.Src.Features.Generic.Models;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace MyGameList.Src.Features.Characters.Models
 {
     [Table("character_roles")]
-    public class CharacterRole
+    public class CharacterRole : GenericModel<int>
     {
         public CharacterRole()
         {
@@ -21,7 +22,7 @@ namespace MyGameList.Src.Features.Characters.Models
         }
 
         [Column("id")]
-        public int Id { get; set; }
+        public new int Id { get; set; }
         [Column("role")]
         public string Role { get; set; }
         [Column("description")]
@@ -33,5 +34,17 @@ namespace MyGameList.Src.Features.Characters.Models
 
         [JsonIgnore]
         public ICollection<Character>? Characters { get; set; }
+
+        protected override bool CustomEquals(object other)
+        {
+            CharacterRole otherObj = (CharacterRole)other;
+            return Role == otherObj.Role
+                && Description == otherObj.Description;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Role, Description);
+        }
     }
 }

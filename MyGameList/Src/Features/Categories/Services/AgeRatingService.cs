@@ -30,12 +30,12 @@ namespace MyGameList.Src.Features.Categories.Services
             AgeRating ageRating = ageRatingDto.AgeRatingDtoToModel(null, null);
             AgeRating? duplicate = await ageRatingRepo.IsDataDuplicateAsync(null, ageRating);
             if (duplicate is not null)
-                return new Response<AgeRatingResponseDto>(HttpStatusCode.BadRequest, "AgeRating must be unique.", null);
+                return new Response<AgeRatingResponseDto>(HttpStatusCode.BadRequest, "Age Rating must be unique.", null);
 
             AgeRating newAgeRating = await ageRatingRepo.AddAsync(ageRating);
             AgeRatingResponseDto ageRatingResponseDto = AgeRatingResponseDto.AgeRatingModelToResponseDto(newAgeRating);
 
-            return new Response<AgeRatingResponseDto>(HttpStatusCode.OK, "AgeRating created successfully.", ageRatingResponseDto);
+            return new Response<AgeRatingResponseDto>(HttpStatusCode.OK, "Age Rating created successfully.", ageRatingResponseDto);
         }
 
         public async Task<Response<List<AgeRatingResponseDto>>> GetAllAgeRatingsAsync()
@@ -50,7 +50,7 @@ namespace MyGameList.Src.Features.Categories.Services
         {
             AgeRating? ageRating = await ageRatingRepo.GetDataByIdAsync(id);
             if (ageRating is null)
-                return new Response<AgeRatingResponseDto>(HttpStatusCode.NotFound, "AgeRating not found.", null);
+                return new Response<AgeRatingResponseDto>(HttpStatusCode.NotFound, "Age Rating not found.", null);
 
             AgeRatingResponseDto ageRatingResponseDto = AgeRatingResponseDto.AgeRatingModelToResponseDto(ageRating);
 
@@ -61,27 +61,27 @@ namespace MyGameList.Src.Features.Categories.Services
         {
             AgeRating? existingAgeRating = await ageRatingRepo.GetDataByIdAsync(id);
             if (existingAgeRating is null)
-                return new Response(HttpStatusCode.NotFound, "AgeRating not found.");
+                return new Response(HttpStatusCode.NotFound, "Age Rating not found.");
 
             AgeRating updatedAgeRating = ageRatingDto.AgeRatingDtoToModel(existingAgeRating, id);
             AgeRating? duplicate = await ageRatingRepo.IsDataDuplicateAsync(id, updatedAgeRating);
             if (duplicate is not null)
-                return new Response(HttpStatusCode.BadRequest, "AgeRating must be unique.");
+                return new Response(HttpStatusCode.BadRequest, "Age Rating must be unique.");
 
             await ageRatingRepo.UpdateDataAsync(updatedAgeRating);
 
-            return new Response(HttpStatusCode.OK, "AgeRating updated successfully.");
+            return new Response(HttpStatusCode.OK, "Age Rating updated successfully.");
         }
 
         public async Task<Response> DeleteAgeRatingAsync(int id)
         {
             AgeRating? existingAgeRating = await ageRatingRepo.GetDataByIdAsync(id);
             if (existingAgeRating is null)
-                return new Response(HttpStatusCode.NotFound, "AgeRating not found.");
+                return new Response(HttpStatusCode.NotFound, "Age Rating not found.");
 
             await ageRatingRepo.DeleteDataAsync(existingAgeRating);
 
-            return new Response(HttpStatusCode.OK, "AgeRating deleted successfully.");
+            return new Response(HttpStatusCode.OK, "Age Rating deleted successfully.");
         }
 
         public async Task<AgeRating?> GetAgeRatingById(int id)
