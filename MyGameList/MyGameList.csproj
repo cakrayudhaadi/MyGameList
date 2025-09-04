@@ -16,11 +16,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Src\Features\Users\Controllers\" />
-	  <Folder Include="Src\Features\Users\Dtos\" />
-	  <Folder Include="Src\Features\Users\Models\" />
-	  <Folder Include="Src\Features\Users\Services\" />
-	  <Folder Include="Src\Features\Users\Repositories\" />
 	  <Folder Include="Src\Shared\Extensions\" />
 	  <Folder Include="Src\Shared\Filters\" />
 	  <Folder Include="Src\Shared\Middleware\" />

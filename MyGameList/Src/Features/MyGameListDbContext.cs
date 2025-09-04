@@ -3,6 +3,7 @@ using MyGameList.Src.Features.Categories.Models;
 using MyGameList.Src.Features.Characters.Models;
 using MyGameList.Src.Features.GameMakers.Models;
 using MyGameList.Src.Features.Games.Models;
+using MyGameList.Src.Features.Users.Models;
 
 namespace MyGameList.Src.Features
 {
@@ -29,6 +30,7 @@ namespace MyGameList.Src.Features
         public DbSet<Game> Game => Set<Game>();
 
         // Users
+        public DbSet<User> User => Set<User>();
 
         // Characters
         public DbSet<Character> Character => Set<Character>();
@@ -38,8 +40,12 @@ namespace MyGameList.Src.Features
         {
             modelBuilder.Entity<Person>()
                 .HasOne(person => person.Gender)
-                .WithMany(gender => gender.Peoples)
+                .WithMany(gender => gender.People)
                 .HasForeignKey(person => person.GenderId);
+            modelBuilder.Entity<User>()
+                .HasOne(user => user.Gender)
+                .WithMany(gender => gender.Users)
+                .HasForeignKey(user => user.GenderId);
             modelBuilder.Entity<Character>()
                 .HasOne(character => character.CharacterRole)
                 .WithMany(characterRole => characterRole.Characters)

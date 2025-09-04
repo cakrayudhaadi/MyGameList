@@ -13,6 +13,7 @@ namespace MyGameList.Src.Features.GameMakers.Dtos
 
         public PersonResponseDto(int id, string name, string? bio, string? gender, DateTime? birthday)
         {
+            Id = id;
             Name = name;
             Bio = bio;
             Gender = gender;

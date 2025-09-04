@@ -6,7 +6,6 @@ namespace MyGameList.Src.Features.GameMakers.Repositories
 {
     public interface IPersonRepository : IGenericRepository<Person, int>
     {
-        Task<Person?> IsDataDuplicateAsync(int? id, Person compare);
     }
 
     public class PersonRepository(MyGameListDbContext context) : GenericRepository<Person, int>(context), IPersonRepository
@@ -23,14 +22,6 @@ namespace MyGameList.Src.Features.GameMakers.Repositories
             return await context.Person
                 .Include(person => person.Gender)
                 .FirstOrDefaultAsync(person => person.Id == id);
-        }
-
-        public async Task<Person?> IsDataDuplicateAsync(int? id, Person compare)
-        {
-            if (id.HasValue)
-                return await context.Person.FirstOrDefaultAsync(person => person.Id != id && person.Name == compare.Name);
-            else
-                return await context.Person.FirstOrDefaultAsync(person => person.Name == compare.Name);
         }
     }
 }

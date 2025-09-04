@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyGameList.Src.Features.GameMakers.Models;
 using MyGameList.Src.Features.Generic.Models;
+using MyGameList.Src.Features.Users.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
@@ -34,9 +35,11 @@ namespace MyGameList.Src.Features.Categories.Models
         public DateTime? CreatedAt { get; set; }
         [Column("updated_at")]
         public DateTime? UpdatedAt { get; set; }
-        
+
         [JsonIgnore]
-        public ICollection<Person>? Peoples { get; set; }
+        public ICollection<Person>? People { get; set; }
+        [JsonIgnore]
+        public ICollection<User>? Users { get; set; }
 
         protected override bool CustomEquals(object other)
         {
