@@ -32,7 +32,7 @@ namespace MyGameList.Src.Features.Users.Repositories
                     || user.Email == compare.Email));
             else
                 return await context.User.FirstOrDefaultAsync(user => (user.Username == compare.Username
-                    && user.Email == compare.Email));
+                    || user.Email == compare.Email));
         }
     }
 }

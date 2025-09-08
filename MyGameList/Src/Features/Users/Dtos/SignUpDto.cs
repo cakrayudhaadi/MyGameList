@@ -1,6 +1,5 @@
 ﻿using MyGameList.Src.Features.Users.Models;
-using MyGameList.Src.Shared.Commons;
-using System.Text.Json.Serialization;
+using System.ComponentModel.DataAnnotations;
 
 namespace MyGameList.Src.Features.Users.Dtos
 {
@@ -23,6 +22,7 @@ namespace MyGameList.Src.Features.Users.Dtos
         }
 
         public string Username { get; set; }
+        [EmailAddress(ErrorMessage = "Invalid email address format.")]
         public string Email { get; set; }
         public string Password { get; set; }
         public string Name { get; set; }
