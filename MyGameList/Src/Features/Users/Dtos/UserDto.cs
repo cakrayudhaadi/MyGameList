@@ -26,10 +26,6 @@ namespace MyGameList.Src.Features.Users.Dtos
             Birthday = birthday;
             Country = country;
             Link = link;
-            Name = name;
-            Bio = bio;
-            GenderId = genderId;
-            Birthday = birthday;
         }
 
         public string Username { get; set; }

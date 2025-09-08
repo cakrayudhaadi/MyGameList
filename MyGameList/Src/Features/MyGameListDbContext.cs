@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MyGameList.Src.Features.Categories.Models;
 using MyGameList.Src.Features.Characters.Models;
 using MyGameList.Src.Features.GameMakers.Models;
@@ -7,7 +8,7 @@ using MyGameList.Src.Features.Users.Models;
 
 namespace MyGameList.Src.Features
 {
-    public partial class MyGameListDbContext : DbContext
+    public partial class MyGameListDbContext : IdentityDbContext
     {
         public MyGameListDbContext(DbContextOptions<MyGameListDbContext> options) : base(options)
         {

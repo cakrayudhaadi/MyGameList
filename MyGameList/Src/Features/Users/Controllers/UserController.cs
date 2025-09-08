@@ -76,5 +76,18 @@ namespace MyGameList.Src.Features.Users.Controllers
                 return res.Result(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
+
+        [HttpPost("signup")]
+        public async Task<ActionResult<ApiResponse>> SignUp(SignUpDto signUpDto)
+        {
+            try
+            {
+                return res.Result(await userService.SignUp(signUpDto));
+            }
+            catch (ArgumentException ex)
+            {
+                return res.Result(HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
     }
 }

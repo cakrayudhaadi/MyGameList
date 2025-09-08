@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MyGameList.Src.Features;
 using MyGameList.Src.Features.Categories;
@@ -5,6 +6,7 @@ using MyGameList.Src.Features.Characters;
 using MyGameList.Src.Features.GameMakers;
 using MyGameList.Src.Features.Games;
 using MyGameList.Src.Features.Users;
+using MyGameList.Src.Shared.Security;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +25,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<MyGameListDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
         new MySqlServerVersion(new Version(8, 0, 21))));
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<MyGameListDbContext>()
+    .AddDefaultTokenProviders();
 
 // Add application services
 builder.Services.AddCategoryServices();
@@ -30,6 +35,7 @@ builder.Services.AddGameMakerServices();
 builder.Services.AddGameServices();
 builder.Services.AddUserServices();
 builder.Services.AddCharacterServices();
+builder.Services.AddSecurityServices();
 
 var app = builder.Build();
 

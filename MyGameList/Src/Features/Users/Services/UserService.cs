@@ -1,13 +1,11 @@
 ﻿using MyGameList.Src.Features.Categories.Models;
 using MyGameList.Src.Features.Categories.Services;
-using MyGameList.Src.Features.GameMakers.Dtos;
-using MyGameList.Src.Features.GameMakers.Models;
 using MyGameList.Src.Features.Users.Dtos;
 using MyGameList.Src.Features.Users.Models;
 using MyGameList.Src.Features.Users.Repositories;
 using MyGameList.Src.Shared.Commons;
+using MyGameList.Src.Shared.Security;
 using System.Net;
-using System.Reflection;
 
 namespace MyGameList.Src.Features.Users.Services
 {
@@ -19,8 +17,11 @@ namespace MyGameList.Src.Features.Users.Services
         Task<Response> UpdateUserAsync(int id, UserDto userDto);
         Task<Response> DeleteUserAsync(int id);
         Task<List<User>> GetUserListByIds(List<int> ids);
+        Task<Response> SignUp(SignUpDto signUpDto);
     }
-    public class UserService(IUserRepository userRepo, IGenderService genderService) : IUserService
+
+    public class UserService(IUserRepository userRepo, IGenderService genderService,
+        IPasswordService passwordService) : IUserService
     {
         public async Task<Response<UserResponseDto>> AddUserAsync(UserDto userDto)
         {
@@ -108,6 +109,27 @@ namespace MyGameList.Src.Features.Users.Services
             List<User> users = await userRepo.GetDatasByIdsAsync(ids);
 
             return users;
+        }
+
+        public async Task<Response> SignUp(SignUpDto signUpDto)
+        {
+            ArgumentNullException.ThrowIfNull(signUpDto);
+
+            string? errValidation = signUpDto.UserValidation();
+            if (errValidation is not null)
+                return new Response(HttpStatusCode.BadRequest, errValidation);
+
+            User user = signUpDto.DtoToModel();
+            User? duplicate = await userRepo.IsDataDuplicateAsync(null, user);
+            if (duplicate is not null)
+                return new Response(HttpStatusCode.BadRequest, "Username and Email must be unique.");
+            user.Password = passwordService.HashPassword(signUpDto.Password);
+
+            await userRepo.AddAsync(user);
+
+            // add verification email logic here
+
+            return new Response(HttpStatusCode.OK, "User registered successfully.");
         }
     }
 }

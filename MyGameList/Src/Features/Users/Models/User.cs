@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using MyGameList.Src.Features.Categories.Models;
 using MyGameList.Src.Features.Generic.Models;
 using System.ComponentModel.DataAnnotations;
@@ -43,6 +44,7 @@ namespace MyGameList.Src.Features.Users.Models
         public string Username { get; set; }
         [Column("email")]
         [Required]
+        [EmailAddress(ErrorMessage = "Invalid email format.")]
         public string Email { get; set; }
         [Column("password")]
         [Required]
